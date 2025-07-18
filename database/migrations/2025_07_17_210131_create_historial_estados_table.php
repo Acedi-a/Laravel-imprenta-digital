@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('estado');
             $table->integer('cambiado_por');
             $table->timestamp('cambiado_en');
-            $table->string('notas');
+            $table->string('notas')->nullable();
             $table->timestamps();
         });
     }

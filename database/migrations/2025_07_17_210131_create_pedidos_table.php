@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('numero_pedido');
             $table->string('estado');
             $table->string('prioridad');
-            $table->text('notas');
+            $table->text('notas')->nullable();
             $table->timestamp('fecha_pedido');
             $table->timestamps();
         });

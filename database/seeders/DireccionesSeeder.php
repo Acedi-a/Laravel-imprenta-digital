@@ -11,6 +11,7 @@ class DireccionesSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    
     public function run(): void
     {
         Direccion::factory()->count(20)->create();

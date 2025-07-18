@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Cotizacion extends Model
 {
     use HasFactory;
+    
+    protected $table = 'cotizaciones';
+    
     protected $fillable = [
         'usuario_id',
         'producto_id',

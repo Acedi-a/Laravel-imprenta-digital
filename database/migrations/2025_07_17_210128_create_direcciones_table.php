@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('usuario_id');
             $table->string('linea1');
-            $table->string('linea2');
+            $table->string('linea2')->nullable();
             $table->string('ciudad');
             $table->string('codigo_postal');
             $table->string('pais');
