@@ -1,107 +1,52 @@
 # 🖨️ Sistema de Gestión de Pedidos - Imprenta Digital
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Laravel-11.x-red?style=for-the-badge&logo=laravel" alt="Laravel">
+  <img src="https://img.shields.io/badge/Laravel-12.x-red?style=for-the-badge&logo=laravel" alt="Laravel">
   <img src="https://img.shields.io/badge/PHP-8.2+-blue?style=for-the-badge&logo=php" alt="PHP">
-  <img src="https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/PostgreSQL-17-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
   <img src="https://img.shields.io/badge/Tecnología_Web_2-2025-green?style=for-the-badge" alt="Tecnología Web 2">
 </p>
 
+## 📸 Capturas de Pantalla
+### Diagrama - Entidad - Relacion
+![Diagrama EDR de la base de datos en postgres](_screenshots/DER_postgres.png)
+
+### Ejecucion de la migracion
+![Imagen referencial de la migracion completa sin fallos](_screenshots/php_artisan_migrate_.png)
+
+### Ejecucion del seeder principal que ejecuta fabricas en cadena para crear todos los datos
+![Imagen referencial del seeder FlujoPrincipal](_screenshots/php_artisan_db_seed_.png)
+
+### Contenido de la tabla Usuarios
+![Contenido de la tabla usuarios](_screenshots/_datos1_.png)
+
+### Contenido de la tabla Envios
+![Contenido de la tabla envios](_screenshots/_datos2_.png)
+
+### Contenido de la tabla Notificaciones
+![Contenido de la tabla notificaciones](_screenshots/_datos3_.png)
+
+### Contenido de la tabla Pagos
+![Contenido de la tabla Pagos](_screenshots/_datos4_.png)
+
+
 ## 📋 Descripción del Proyecto
+Sistema de gestión de pedidos para imprenta digital: Plataforma web que permite a los clientes cargar diseños, cotizar, seleccionar impresiones y dar seguimiento a sus pedidos. Desarrollado con Laravel 12 y PostgreSQL para la materia Tecnología Web 2.
 
-**Sistema de gestión de pedidos para una imprenta digital** - Plataforma web donde los clientes pueden cargar sus diseños, seleccionar tipo de impresión, cotizar y dar seguimiento al estado del pedido.
+## 🚀 Funcionalidades Clave
+Gestión de Usuarios: Registro, autenticación y perfiles con direcciones de envío.
 
-Este proyecto fue desarrollado como parte de la materia **Tecnología Web 2** utilizando **Laravel 11** y **PostgreSQL**.
+Gestión de Productos: Catálogo con opciones personalizables y precios dinámicos.
 
-## 🚀 Funcionalidades
+Sistema de Cotizaciones: Cotizaciones automáticas, carga de archivos y historial.
 
-### 👥 Gestión de Usuarios
-- Registro y autenticación de clientes
-- Perfiles de usuario con información personal
-- Gestión de direcciones de envío
+Gestión de Pedidos: Conversión de cotizaciones a pedidos, seguimiento y prioridades.
 
-### 📦 Gestión de Productos
-- Catálogo de productos de impresión
-- Categorías de productos
-- Opciones personalizables (tamaño, material, acabado)
-- Precios dinámicos según especificaciones
+Sistema de Pagos: Registro de pagos, estados y cálculos automáticos.
 
-### 💰 Sistema de Cotizaciones
-- Cotizaciones automáticas basadas en especificaciones
-- Carga de archivos de diseño
-- Aprobación/rechazo de cotizaciones
-- Historial de cotizaciones
+Sistema de Envíos: Gestión por transportista, códigos de seguimiento y fechas de entrega.
 
-### 📋 Gestión de Pedidos
-- Conversión automática de cotizaciones aprobadas a pedidos
-- Seguimiento de estado del pedido
-- Sistema de prioridades
-- Historial de cambios de estado
-
-### 💳 Sistema de Pagos
-- Registro de pagos por pedido
-- Estados de pago (pendiente, pagado, cancelado)
-- Montos calculados automáticamente
-
-### 🚚 Sistema de Envíos
-- Gestión de envíos por transportista
-- Códigos de seguimiento
-- Fechas estimadas de entrega
-- Direcciones de envío
-
-### 🔔 Sistema de Notificaciones
-- Notificaciones de estado de pedidos
-- Notificaciones de envío
-- Mensajes personalizados
-
-## 🏗️ Arquitectura del Sistema
-
-### 📊 Diagrama de Base de Datos
-```
-Usuarios → Cotizaciones → Pedidos → Envíos
-    ↓           ↓           ↓        ↓
-Direcciones   Archivos    Pagos   Notificaciones
-                ↓           ↓
-             Productos  Historial_Estados
-                ↓
-           Opciones_Producto
-```
-
-### 🗃️ Tablas Principales
-
-| Tabla | Descripción | Registros Típicos |
-|-------|-------------|------------------|
-| `usuarios` | Clientes de la imprenta | 🙋‍♂️ Información personal |
-| `productos` | Catálogo de servicios | 📄 Tarjetas, flyers, banners |
-| `cotizaciones` | Solicitudes de precio | 💰 Precio según especificaciones |
-| `pedidos` | Órdenes de trabajo | 📋 Estado, prioridad, notas |
-| `envios` | Despachos y entregas | 🚚 Transportista, seguimiento |
-| `pagos` | Transacciones financieras | 💳 Montos, estados |
-| `notificaciones` | Comunicaciones | 🔔 Mensajes automáticos |
-
-## 📁 Estructura del Proyecto
-
-```
-proyecto-imprenta-laravel/
-├── app/
-│   ├── Models/           # Modelos Eloquent
-│   │   ├── Usuario.php
-│   │   ├── Producto.php
-│   │   ├── Cotizacion.php
-│   │   ├── Pedido.php
-│   │   └── ...
-│   ├── Http/Controllers/ # Controladores
-│   └── ...
-├── database/
-│   ├── migrations/       # Migraciones de BD
-│   ├── seeders/         # Seeders de datos
-│   │   └── FlujoPrincipalSeeder.php
-│   └── factories/       # Factories para datos fake
-├── resources/
-│   ├── views/           # Vistas Blade
-│   └── ...
-└── ...
-```
+Sistema de Notificaciones: Alertas sobre el estado de pedidos y envíos.
 
 ## 🛠️ Instalación y Configuración
 
@@ -167,6 +112,65 @@ proyecto-imprenta-laravel/
    php artisan serve
    ```
 
+---
+---
+<p align="center">
+  Detalles extras
+</p>
+
+
+
+## 🏗️ Arquitectura del Sistema
+
+### 📊 Diagrama de Base de Datos
+```
+Usuarios → Cotizaciones → Pedidos → Envíos
+    ↓           ↓           ↓        ↓
+Direcciones   Archivos    Pagos   Notificaciones
+                ↓           ↓
+             Productos  Historial_Estados
+                ↓
+           Opciones_Producto
+```
+
+### 🗃️ Tablas Principales
+
+| Tabla | Descripción | Registros Típicos |
+|-------|-------------|------------------|
+| `usuarios` | Clientes de la imprenta | 🙋‍♂️ Información personal |
+| `productos` | Catálogo de servicios | 📄 Tarjetas, flyers, banners |
+| `cotizaciones` | Solicitudes de precio | 💰 Precio según especificaciones |
+| `pedidos` | Órdenes de trabajo | 📋 Estado, prioridad, notas |
+| `envios` | Despachos y entregas | 🚚 Transportista, seguimiento |
+| `pagos` | Transacciones financieras | 💳 Montos, estados |
+| `notificaciones` | Comunicaciones | 🔔 Mensajes automáticos |
+
+## 📁 Estructura del Proyecto
+
+```
+proyecto-imprenta-laravel/
+├── app/
+│   ├── Models/           # Modelos Eloquent
+│   │   ├── Usuario.php
+│   │   ├── Producto.php
+│   │   ├── Cotizacion.php
+│   │   ├── Pedido.php
+│   │   └── ...
+│   ├── Http/Controllers/ # Controladores
+│   └── ...
+├── database/
+│   ├── migrations/       # Migraciones de BD
+│   ├── seeders/         # Seeders de datos
+│   │   └── FlujoPrincipalSeeder.php
+│   └── factories/       # Factories para datos fake
+├── resources/
+│   ├── views/           # Vistas Blade
+│   └── ...
+└── ...
+```
+
+
+
 ## 🎯 Seeder Principal - "Efecto Dominó"
 
 El proyecto incluye un seeder especial llamado `FlujoPrincipalSeeder` que crea todo el ecosistema de datos relacionados de una sola vez:
@@ -186,85 +190,6 @@ php artisan db:seed --class=FlujoPrincipalSeeder
 7. **Registra historial de estados** de cada pedido
 8. **Envía notificaciones** en cada etapa del proceso
 
-### 📊 Datos Generados
-
-| Entidad | Cantidad | Descripción |
-|---------|----------|-------------|
-| Usuarios | 5 | Clientes con datos reales |
-| Productos | 10 | Catálogo de servicios |
-| Cotizaciones | 13 | Solicitudes de precio |
-| Pedidos | 8 | Órdenes de trabajo |
-| Envíos | 4 | Despachos realizados |
-| Pagos | 8 | Transacciones |
-| Notificaciones | 17 | Mensajes automáticos |
-
-## 🔧 Comandos Útiles
-
-```bash
-# Limpiar y recrear base de datos
-php artisan migrate:fresh
-
-# Ejecutar seeder principal
-php artisan db:seed --class=FlujoPrincipalSeeder
-
-# Limpiar caché
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-
-# Generar controladores
-php artisan make:controller NombreController
-
-# Crear migraciones
-php artisan make:migration create_tabla_table
-```
-
-## 📸 Capturas de Pantalla
-
-<!-- Para agregar imágenes, usa la siguiente sintaxis: -->
-<!-- ![Descripción](ruta/a/imagen.png) -->
-<!-- ![Dashboard](screenshots/dashboard.png) -->
-<!-- ![Cotizaciones](screenshots/cotizaciones.png) -->
-
-> **Nota:** Para agregar imágenes al README, coloca las imágenes en una carpeta `screenshots/` o `images/` y utiliza la sintaxis:
-> ```markdown
-> ![Descripción de la imagen](ruta/a/imagen.png)
-> ```
-
-## 🤝 Contribución
-
-Este proyecto es parte de la materia **Tecnología Web 2**. Para contribuir:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📝 Notas Importantes
-
-- **Estado del proyecto**: En desarrollo (Backend completado)
-- **Frontend**: Pendiente de implementación
-- **Autenticación**: Sistema básico de Laravel implementado
-- **API**: Endpoints disponibles para integraciones futuras
-
-## 🐛 Solución de Problemas
-
-### Error de conexión a PostgreSQL
-```bash
-# Verificar que PostgreSQL esté corriendo
-sudo systemctl status postgresql
-
-# Iniciar PostgreSQL si está detenido
-sudo systemctl start postgresql
-```
-
-### Error de permisos en storage
-```bash
-sudo chmod -R 775 storage/
-sudo chmod -R 775 bootstrap/cache/
-```
-
 ## 📄 Licencia
 
 Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
@@ -272,7 +197,7 @@ Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 ## 👨‍💻 Autor
 
 **Proyecto desarrollado para Tecnología Web 2**
-- Universidad: [Tu Universidad]
+- Universidad: Privada Domingo Savio
 - Materia: Tecnología Web 2
 - Año: 2025
 
