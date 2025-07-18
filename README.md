@@ -1,61 +1,284 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🖨️ Sistema de Gestión de Pedidos - Imprenta Digital
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-11.x-red?style=for-the-badge&logo=laravel" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.2+-blue?style=for-the-badge&logo=php" alt="PHP">
+  <img src="https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Tecnología_Web_2-2025-green?style=for-the-badge" alt="Tecnología Web 2">
 </p>
 
-## About Laravel
+## 📋 Descripción del Proyecto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Sistema de gestión de pedidos para una imprenta digital** - Plataforma web donde los clientes pueden cargar sus diseños, seleccionar tipo de impresión, cotizar y dar seguimiento al estado del pedido.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Este proyecto fue desarrollado como parte de la materia **Tecnología Web 2** utilizando **Laravel 11** y **PostgreSQL**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Funcionalidades
 
-## Learning Laravel
+### 👥 Gestión de Usuarios
+- Registro y autenticación de clientes
+- Perfiles de usuario con información personal
+- Gestión de direcciones de envío
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📦 Gestión de Productos
+- Catálogo de productos de impresión
+- Categorías de productos
+- Opciones personalizables (tamaño, material, acabado)
+- Precios dinámicos según especificaciones
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 💰 Sistema de Cotizaciones
+- Cotizaciones automáticas basadas en especificaciones
+- Carga de archivos de diseño
+- Aprobación/rechazo de cotizaciones
+- Historial de cotizaciones
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📋 Gestión de Pedidos
+- Conversión automática de cotizaciones aprobadas a pedidos
+- Seguimiento de estado del pedido
+- Sistema de prioridades
+- Historial de cambios de estado
 
-## Laravel Sponsors
+### 💳 Sistema de Pagos
+- Registro de pagos por pedido
+- Estados de pago (pendiente, pagado, cancelado)
+- Montos calculados automáticamente
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🚚 Sistema de Envíos
+- Gestión de envíos por transportista
+- Códigos de seguimiento
+- Fechas estimadas de entrega
+- Direcciones de envío
 
-### Premium Partners
+### 🔔 Sistema de Notificaciones
+- Notificaciones de estado de pedidos
+- Notificaciones de envío
+- Mensajes personalizados
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🏗️ Arquitectura del Sistema
 
-## Contributing
+### 📊 Diagrama de Base de Datos
+```
+Usuarios → Cotizaciones → Pedidos → Envíos
+    ↓           ↓           ↓        ↓
+Direcciones   Archivos    Pagos   Notificaciones
+                ↓           ↓
+             Productos  Historial_Estados
+                ↓
+           Opciones_Producto
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🗃️ Tablas Principales
 
-## Code of Conduct
+| Tabla | Descripción | Registros Típicos |
+|-------|-------------|------------------|
+| `usuarios` | Clientes de la imprenta | 🙋‍♂️ Información personal |
+| `productos` | Catálogo de servicios | 📄 Tarjetas, flyers, banners |
+| `cotizaciones` | Solicitudes de precio | 💰 Precio según especificaciones |
+| `pedidos` | Órdenes de trabajo | 📋 Estado, prioridad, notas |
+| `envios` | Despachos y entregas | 🚚 Transportista, seguimiento |
+| `pagos` | Transacciones financieras | 💳 Montos, estados |
+| `notificaciones` | Comunicaciones | 🔔 Mensajes automáticos |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📁 Estructura del Proyecto
 
-## Security Vulnerabilities
+```
+proyecto-imprenta-laravel/
+├── app/
+│   ├── Models/           # Modelos Eloquent
+│   │   ├── Usuario.php
+│   │   ├── Producto.php
+│   │   ├── Cotizacion.php
+│   │   ├── Pedido.php
+│   │   └── ...
+│   ├── Http/Controllers/ # Controladores
+│   └── ...
+├── database/
+│   ├── migrations/       # Migraciones de BD
+│   ├── seeders/         # Seeders de datos
+│   │   └── FlujoPrincipalSeeder.php
+│   └── factories/       # Factories para datos fake
+├── resources/
+│   ├── views/           # Vistas Blade
+│   └── ...
+└── ...
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🛠️ Instalación y Configuración
 
-## License
+### 📋 Requisitos Previos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **PHP 8.2+**
+- **Composer**
+- **PostgreSQL 12+**
+- **Node.js & NPM** (opcional, para frontend)
+
+### ⚡ Instalación Rápida
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/tu-usuario/proyecto-imprenta-laravel.git
+   cd proyecto-imprenta-laravel
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   composer install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Configurar base de datos en `.env`**
+   ```env
+   DB_CONNECTION=pgsql
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_DATABASE=proyecto_laravel
+   DB_USERNAME=laravel_user
+   DB_PASSWORD=laravel_password
+   ```
+
+5. **Crear base de datos PostgreSQL**
+   ```sql
+   CREATE DATABASE proyecto_laravel;
+   CREATE USER laravel_user WITH PASSWORD 'laravel_password';
+   GRANT ALL PRIVILEGES ON DATABASE proyecto_laravel TO laravel_user;
+   ```
+
+6. **Generar clave de aplicación**
+   ```bash
+   php artisan key:generate
+   ```
+
+7. **Ejecutar migraciones**
+   ```bash
+   php artisan migrate
+   ```
+
+8. **Poblar base de datos con datos de prueba**
+   ```bash
+   php artisan db:seed --class=FlujoPrincipalSeeder
+   ```
+
+9. **Iniciar servidor de desarrollo**
+   ```bash
+   php artisan serve
+   ```
+
+## 🎯 Seeder Principal - "Efecto Dominó"
+
+El proyecto incluye un seeder especial llamado `FlujoPrincipalSeeder` que crea todo el ecosistema de datos relacionados de una sola vez:
+
+```bash
+php artisan db:seed --class=FlujoPrincipalSeeder
+```
+
+### 🔄 ¿Qué hace el FlujoPrincipalSeeder?
+
+1. **Crea 5 usuarios** con sus respectivas direcciones
+2. **Genera 10 productos** del catálogo
+3. **Crea 13 cotizaciones** (2-3 por usuario)
+4. **Convierte cotizaciones aprobadas en pedidos**
+5. **Genera pagos** automáticamente
+6. **Crea envíos** para pedidos completados
+7. **Registra historial de estados** de cada pedido
+8. **Envía notificaciones** en cada etapa del proceso
+
+### 📊 Datos Generados
+
+| Entidad | Cantidad | Descripción |
+|---------|----------|-------------|
+| Usuarios | 5 | Clientes con datos reales |
+| Productos | 10 | Catálogo de servicios |
+| Cotizaciones | 13 | Solicitudes de precio |
+| Pedidos | 8 | Órdenes de trabajo |
+| Envíos | 4 | Despachos realizados |
+| Pagos | 8 | Transacciones |
+| Notificaciones | 17 | Mensajes automáticos |
+
+## 🔧 Comandos Útiles
+
+```bash
+# Limpiar y recrear base de datos
+php artisan migrate:fresh
+
+# Ejecutar seeder principal
+php artisan db:seed --class=FlujoPrincipalSeeder
+
+# Limpiar caché
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+
+# Generar controladores
+php artisan make:controller NombreController
+
+# Crear migraciones
+php artisan make:migration create_tabla_table
+```
+
+## 📸 Capturas de Pantalla
+
+<!-- Para agregar imágenes, usa la siguiente sintaxis: -->
+<!-- ![Descripción](ruta/a/imagen.png) -->
+<!-- ![Dashboard](screenshots/dashboard.png) -->
+<!-- ![Cotizaciones](screenshots/cotizaciones.png) -->
+
+> **Nota:** Para agregar imágenes al README, coloca las imágenes en una carpeta `screenshots/` o `images/` y utiliza la sintaxis:
+> ```markdown
+> ![Descripción de la imagen](ruta/a/imagen.png)
+> ```
+
+## 🤝 Contribución
+
+Este proyecto es parte de la materia **Tecnología Web 2**. Para contribuir:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📝 Notas Importantes
+
+- **Estado del proyecto**: En desarrollo (Backend completado)
+- **Frontend**: Pendiente de implementación
+- **Autenticación**: Sistema básico de Laravel implementado
+- **API**: Endpoints disponibles para integraciones futuras
+
+## 🐛 Solución de Problemas
+
+### Error de conexión a PostgreSQL
+```bash
+# Verificar que PostgreSQL esté corriendo
+sudo systemctl status postgresql
+
+# Iniciar PostgreSQL si está detenido
+sudo systemctl start postgresql
+```
+
+### Error de permisos en storage
+```bash
+sudo chmod -R 775 storage/
+sudo chmod -R 775 bootstrap/cache/
+```
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 👨‍💻 Autor
+
+**Proyecto desarrollado para Tecnología Web 2**
+- Universidad: [Tu Universidad]
+- Materia: Tecnología Web 2
+- Año: 2025
+
+---
+
+<p align="center">
+  <strong>🖨️ Sistema de Gestión de Pedidos - Imprenta Digital</strong><br>
+  <em>Desarrollado con ❤️ usando Laravel y PostgreSQL</em>
+</p>
