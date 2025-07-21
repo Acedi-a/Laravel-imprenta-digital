@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('cotizaciones', function (Blueprint $table) {
             $table->id();
-            $table->integer('usuario_id');  
-            $table->integer('producto_id');
-            $table->integer('archivo_id');
+            $table->foreignId('usuario_id')->constrained('usuarios');  
+            $table->foreignId('producto_id')->constrained('productos');
+            $table->foreignId('archivo_id')->constrained('archivos');
             $table->integer('cantidad');
             $table->decimal('ancho');
             $table->decimal('alto');

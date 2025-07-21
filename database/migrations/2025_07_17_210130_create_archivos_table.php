@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('archivos', function (Blueprint $table) {
             $table->id();
-            $table->integer('usuario_id');
+            $table->foreignId('usuario_id')->constrained('usuarios');
             $table->string('nombre_original');
             $table->string('ruta_guardado');
             $table->decimal('tamaño_archivo');

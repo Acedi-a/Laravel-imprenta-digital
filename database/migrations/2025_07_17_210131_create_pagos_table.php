@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->id();
-            $table->integer('pedido_id');
+            $table->foreignId('pedido_id')->constrained('pedidos');
             $table->decimal('monto');
             $table->string('metodo');
             $table->timestamp('fecha_pago');

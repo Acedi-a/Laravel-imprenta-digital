@@ -37,29 +37,4 @@ class ArchivoFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the file is a PDF.
-     */
-    public function pdf(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'nombre_original' => fake()->word() . '.pdf',
-            'ruta_guardado' => 'uploads/' . fake()->uuid() . '.pdf',
-            'tipo_mime' => 'application/pdf',
-        ]);
-    }
-
-    /**
-     * Indicate that the file is an image.
-     */
-    public function imagen(): static
-    {
-        $extension = fake()->randomElement(['jpg', 'png']);
-        
-        return $this->state(fn (array $attributes) => [
-            'nombre_original' => fake()->word() . '.' . $extension,
-            'ruta_guardado' => 'uploads/' . fake()->uuid() . '.' . $extension,
-            'tipo_mime' => $extension === 'jpg' ? 'image/jpeg' : 'image/png',
-        ]);
-    }
 }

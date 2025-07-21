@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('envios', function (Blueprint $table) {
             $table->id();
-            $table->integer('pedido_id');
-            $table->integer('direccion_id');
+            $table->foreignId('pedido_id')->constrained('pedidos');
+            $table->foreignId('direccion_id')->constrained('direcciones');
             $table->string('transportista');
             $table->string('codigo_seguimiento');
             $table->timestamp('fecha_envio');

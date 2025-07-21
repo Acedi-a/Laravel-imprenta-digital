@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('opciones_producto', function (Blueprint $table) {
             $table->id();
-            $table->integer('producto_id');
+            $table->foreignId('producto_id')->constrained('productos');
             $table->string('nombre_opcion');
             $table->string('valor_opcion');
             $table->decimal('ajuste_precio');

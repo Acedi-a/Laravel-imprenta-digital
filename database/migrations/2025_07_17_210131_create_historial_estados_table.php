@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('historial_estados', function (Blueprint $table) {
             $table->id();
-            $table->integer('pedido_id');
+            $table->foreignId('pedido_id')->constrained('pedidos');
             $table->string('estado');
             $table->integer('cambiado_por');
             $table->timestamp('cambiado_en');

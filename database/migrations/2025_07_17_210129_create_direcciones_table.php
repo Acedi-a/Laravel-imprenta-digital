@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
-            $table->integer('usuario_id');
+            $table->foreignId('usuario_id')->constrained('usuarios');
             $table->string('linea1');
             $table->string('linea2')->nullable();
             $table->string('ciudad');
