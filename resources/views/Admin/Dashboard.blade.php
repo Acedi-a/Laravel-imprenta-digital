@@ -1,4 +1,4 @@
-@extends('layouts.LayoutAdmin')
+@extends('Layouts.LayoutAdmin')
 
 
 @section('title', 'Inicio del Panel')
