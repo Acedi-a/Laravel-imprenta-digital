@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/inicio', [ClienteController::class, 'inicio']);
+Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 
 /*
 Route::middleware(['auth', 'rol:cliente'])->group(function () {
