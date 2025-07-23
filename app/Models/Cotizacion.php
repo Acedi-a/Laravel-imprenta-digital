@@ -20,6 +20,20 @@ class Cotizacion extends Model
         'alto',
         'precio_total',
         'estado'
-
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'usuario_id');
+    }
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, "producto_id");
+    }
+
+    public function archivo()
+    {
+        return $this->belongsTo(Archivo::class, "archivo_id");
+    }
 }

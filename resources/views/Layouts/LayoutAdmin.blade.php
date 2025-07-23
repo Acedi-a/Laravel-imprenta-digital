@@ -94,11 +94,11 @@
                     </a>
 
                     <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-4 mb-2 nav-text">Operaciones</h3>
-                    <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
+                    <a href="{{ route('admin.cotizaciones.index') }}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-file-invoice-dollar fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Cotizaciones</span>
                     </a>
-                    <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
+                    <a href="{{ route('admin.pedidos.index') }}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-shopping-cart fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Pedidos</span>
                     </a>

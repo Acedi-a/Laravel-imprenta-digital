@@ -15,6 +15,10 @@ class Pedido extends Model
         'prioridad',
         'notas',
         'fecha_pedido'
-        
     ];
+
+    public function cotizacion()
+    {
+        return $this->belongsTo(Cotizacion::class,'cotizacion_id');
+    }
 }
