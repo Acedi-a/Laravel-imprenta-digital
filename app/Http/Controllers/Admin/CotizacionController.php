@@ -17,7 +17,7 @@ class CotizacionController extends Controller
         $usuarios     = Usuario::all();
         $productos    = Producto::all();
         $archivos     = Archivo::all();
-        return view('admin.cotizaciones.index', compact('cotizaciones', 'usuarios', 'productos', 'archivos'));
+        return view('Admin.Cotizaciones.index', compact('cotizaciones', 'usuarios', 'productos', 'archivos'));
     }
 
     public function guardar(Request $request)

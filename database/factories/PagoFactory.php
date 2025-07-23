@@ -28,6 +28,8 @@ class PagoFactory extends Factory
         ];
     }
 
+    
+
     /**
      * Indicate that the payment is completed.
      */

@@ -59,10 +59,8 @@
 
 <body class="bg-gray-100 text-gray-800">
     <div class="flex min-h-screen">
-        {{-- Sidebar mejorado --}}
         <aside id="sidebar" class="sidebar bg-white shadow-lg fixed h-full flex flex-col justify-between sidebar-expanded">
             <div class="p-4 flex flex-col h-full">
-                {{-- Logo y botón para colapsar --}}
                 <div class="flex items-center justify-between mb-8">
                     <h2 class="text-xl font-bold text-indigo-600 tracking-wider transition-opacity duration-300">
                         <span class="logo-text">IMP-ADMIN</span>
@@ -72,9 +70,8 @@
                     </button>
                 </div>
                 
-                {{-- Menú de navegación principal --}}
                 <nav class="flex-1 space-y-2">
-                    <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
+                    <a href="{{route('admin.dashboard.index')}}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-tachometer-alt fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Dashboard</span>
                     </a>
@@ -102,17 +99,16 @@
                         <i class="fas fa-shopping-cart fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Pedidos</span>
                     </a>
-                    <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
+                    <a href="{{ route('admin.pagos.index') }}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-credit-card fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Pagos</span>
                     </a>
-                    <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
+                    <a href="{{route('admin.envios.index')}}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-truck fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Envíos</span>
                     </a>
                 </nav>
 
-                {{-- Pie de página de la barra lateral --}}
                 <div class="mt-8 pt-4 border-t border-gray-200">
                     <form method="POST">
                         @csrf
@@ -125,12 +121,10 @@
             </div>
         </aside>
 
-        {{-- Contenido principal --}}
         <div id="main-content" class="flex-1 ml-64 flex flex-col">
             <header class="bg-white shadow-sm sticky top-0 z-10">
                 <div class="flex items-center justify-between p-4 px-6 border-b border-gray-200">
                     <h1 class="text-2xl font-semibold text-gray-900">@yield('title', 'Panel de Administración')</h1>
-                    {{-- Puedes añadir aquí un perfil de usuario, notificaciones, etc. --}}
                 </div>
             </header>
 
@@ -138,7 +132,6 @@
                 @yield('content')
             </main>
 
-            {{-- Footer mejorado --}}
             <footer class="text-center p-4 text-sm text-gray-500 bg-white border-t border-gray-200">
                 &copy; {{ date('Y') }} Imprenta Digital. Admin Panel.
             </footer>

@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductoController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\CotizacionController;
+use App\Http\Controllers\Admin\PagoController;
+use App\Http\Controllers\Admin\EnvioController;
+use App\Http\Controllers\Admin\PedidoController;
 
-Route::get('/inicio', [ClienteController::class, 'inicio']);
-Route::get('/admin/dashboard', [DashboardController::class, 'dashboard']);
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
+Route::get('/admin/dashboard/pdf', [DashboardController::class, 'pdf'])->name('admin.dashboard.pdf');
 
 // Productos admin
 Route::get('/admin/productos',[ProductoController::class,'index'])->name('admin.productos.index');
@@ -28,10 +30,23 @@ Route::put('/admin/cotizaciones/{cotizacion}', [CotizacionController::class, 'ac
 Route::patch('/admin/cotizaciones/{cotizacion}/estado', [CotizacionController::class, 'eliminar'])->name('admin.cotizaciones.eliminar');
 
 // Pedidos admin
-Route::get('/admin/pedidos', [App\Http\Controllers\Admin\PedidoController::class, 'index'])->name('admin.pedidos.index');
-Route::post('/admin/pedidos', [App\Http\Controllers\Admin\PedidoController::class, 'guardar'])->name('admin.pedidos.guardar');
-Route::put('/admin/pedidos/{pedido}', [App\Http\Controllers\Admin\PedidoController::class, 'actualizar'])->name('admin.pedidos.actualizar');
-Route::patch('/pedidos/{pedido}/estado', [App\Http\Controllers\Admin\PedidoController::class, 'eliminar'])->name('admin.pedidos.eliminar');
+Route::get('/admin/pedidos', [PedidoController::class, 'index'])->name('admin.pedidos.index');
+Route::post('/admin/pedidos', [PedidoController::class, 'guardar'])->name('admin.pedidos.guardar');
+Route::put('/admin/pedidos/{pedido}', [PedidoController::class, 'actualizar'])->name('admin.pedidos.actualizar');
+Route::patch('/pedidos/{pedido}/estado', [PedidoController::class, 'eliminar'])->name('admin.pedidos.eliminar');
+
+
+// Pagos admin
+Route::get('/admin/pagos', [PagoController::class, 'index'])->name('admin.pagos.index');
+Route::post('/admin/pagos', [PagoController::class, 'guardar'])->name('admin.pagos.guardar');
+Route::put('/admin/pagos/{pago}', [PagoController::class, 'actualizar'])->name('admin.pagos.actualizar');
+Route::patch('/admin/pagos/{pago}/estado', [PagoController::class, 'eliminar'])->name('admin.pagos.eliminar');
+
+// Envíos admin
+Route::get('/admin/envios', [EnvioController::class, 'index'])->name('admin.envios.index');
+Route::post('/admin/envios', [EnvioController::class, 'guardar'])->name('admin.envios.guardar');
+Route::put('/admin/envios/{envio}', [EnvioController::class, 'actualizar'])->name('admin.envios.actualizar');
+Route::patch('/admin/envios/{envio}/estado', [EnvioController::class, 'eliminar'])->name('admin.envios.eliminar');
 
 /*
 Route::middleware(['auth', 'rol:cliente'])->group(function () {

@@ -16,4 +16,9 @@ class Pago extends Model
         'estado',
         'referencia'
     ];
+
+    public function pedido()
+    {
+        return $this->belongsTo(Pedido::class,'pedido_id');
+    }
 }

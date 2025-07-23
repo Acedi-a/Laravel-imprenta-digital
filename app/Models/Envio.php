@@ -16,4 +16,13 @@ class Envio extends Model
         'fecha_envio',         
         'fecha_estimada_entrega'
     ];
+
+    public function pedido()
+    {
+        return $this->belongsTo(Pedido::class, 'pedido_id');
+    }
+    public function direccion()
+    {
+        return $this->belongsTo(Direccion::class, 'direccion_id');
+    }
 }

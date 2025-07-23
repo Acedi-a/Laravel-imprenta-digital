@@ -13,7 +13,7 @@ class PedidoController extends Controller
     {
         $pedidos     = Pedido::with('cotizacion')->orderBy('id', 'desc')->paginate(20);
         $cotizaciones = Cotizacion::all();
-        return view('admin.pedidos.index', compact('pedidos', 'cotizaciones'));
+        return view('Admin.Pedidos.index', compact('pedidos', 'cotizaciones'));
     }
 
     public function guardar(Request $request)
