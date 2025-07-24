@@ -9,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
         }
@@ -32,7 +33,7 @@
         .nav-link {
             transition: all 0.2s ease;
         }
-        
+
         .nav-link:hover {
             background-color: #eef2ff;
         }
@@ -42,7 +43,7 @@
             color: #4f46e5;
             font-weight: 600;
         }
-        
+
         .nav-link.active .icon {
             color: #4f46e5;
         }
@@ -69,7 +70,7 @@
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
-                
+
                 <nav class="flex-1 space-y-2">
                     <a href="{{route('admin.dashboard.index')}}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-tachometer-alt fa-lg w-6 icon transition-transform"></i>
@@ -80,6 +81,10 @@
                     <a href="{{ route('admin.productos.index') }}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-box-open fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Productos</span>
+                    </a>
+                    <a href="{{ route('admin.tamanopapel.index') }}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
+                        <i class="fas fa-paperclip fa-lg w-6 icon transition-transform"></i>
+                        <span class="ml-4 nav-text">Tamaños de Papel</span>
                     </a>
                     <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-tags fa-lg w-6 icon transition-transform"></i>
@@ -150,7 +155,7 @@
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('sidebar-collapsed');
             sidebar.classList.toggle('sidebar-expanded');
-            
+
             mainContent.classList.toggle('ml-64');
             mainContent.classList.toggle('ml-18');
 

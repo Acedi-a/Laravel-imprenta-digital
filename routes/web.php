@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CotizacionController;
 use App\Http\Controllers\Admin\PagoController;
 use App\Http\Controllers\Admin\EnvioController;
 use App\Http\Controllers\Admin\PedidoController;
+use App\Http\Controllers\Admin\TamanoPapelController;
 
 use App\Http\Controllers\Client\InicioController;
 
@@ -22,6 +23,13 @@ Route::get('/admin/productos',[ProductoController::class,'index'])->name('admin.
 Route::post('/admin/productos', [ProductoController::class, 'guardar'])->name('admin.productos.guardar');
 Route::put('/admin/productos/{producto}',[ProductoController::class, 'actualizar'])->name('admin.productos.actualizar');
 Route::delete('/admin/productos/{producto}',[ProductoController::class, 'eliminar'])->name('admin.productos.eliminar');
+
+// Tamaño papel
+Route::get('/admin/tamanopapel', [TamanoPapelController::class, 'index'])->name('admin.tamanopapel.index');
+Route::post('/admin/tamanopapel', [TamanoPapelController::class, 'store'])->name('admin.tamanopapel.store');
+Route::put('/admin/tamanopapel/{id}', [TamanoPapelController::class, 'update'])->name('admin.tamanopapel.update');
+Route::patch('/admin/tamanopapel/{id}', [TamanoPapelController::class, 'destroy'])->name('admin.tamanopapel.destroy');
+
 
 // Usuarios admin
 Route::get('/admin/usuarios', [UsuarioController::class, 'index'])->name('admin.usuarios.index');
