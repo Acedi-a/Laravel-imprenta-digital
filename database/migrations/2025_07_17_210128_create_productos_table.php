@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('precio_base', 10, 2);
             $table->decimal('descuento', 5, 2)->nullable();
             $table->text('descripcion')->nullable();
+            $table->string('estado')->default('activo');
             $table->timestamps();
         });
     }

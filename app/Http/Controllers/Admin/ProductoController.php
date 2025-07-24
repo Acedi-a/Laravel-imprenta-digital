@@ -29,6 +29,7 @@ class ProductoController extends Controller
             'precio_base'     => 'required|numeric|min:0',
             'descuento'       => 'nullable|numeric|min:0',
             'descripcion'     => 'nullable|string',
+            'estado'          => 'required|in:activo,inactivo'
         ]);
 
         Producto::create($request->all());
@@ -48,6 +49,7 @@ class ProductoController extends Controller
             'precio_base'     => 'required|numeric|min:0',
             'descuento'       => 'nullable|numeric|min:0',
             'descripcion'     => 'nullable|string',
+            'estado'          => 'required|in:activo,inactivo',
         ]);
 
         $producto->update($request->all());

@@ -21,6 +21,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio base</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descuento</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tamaño papel</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
         </thead>
@@ -37,6 +38,13 @@
                         {{ $p->tamanoPapel->nombre }} ({{ $p->tamanoPapel->ancho }}x{{ $p->tamanoPapel->alto }} {{ $p->tamanoPapel->unidad_medida }})
                     @else
                         N/A
+                    @endif
+                </td>
+                <td class="px-6 py-4 text-sm">
+                    @if($p->estado === 'activo')
+                        <span class="text-green-600 font-semibold">Activo</span>
+                    @else
+                        <span class="text-red-600 font-semibold">Inactivo</span>
                     @endif
                 </td>
                 <td class="px-6 py-4 text-right text-sm font-medium space-x-2">
@@ -125,6 +133,13 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Descuento (%)</label>
                     <input type="number" step="0.01" min="0" max="100" name="descuento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Estado</label>
+                    <select name="estado" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Descripción</label>

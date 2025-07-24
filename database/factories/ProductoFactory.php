@@ -23,6 +23,7 @@ class ProductoFactory extends Factory
             'precio_base' => $this->faker->randomFloat(2, 10, 500),
             'descuento' => $this->faker->randomFloat(2, 0, 50),
             'descripcion' => $this->faker->sentence(),
+            'estado' => $this->faker->randomElement(['activo', 'inactivo']),
         ];
     }
 }

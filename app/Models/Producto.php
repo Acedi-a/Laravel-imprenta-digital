@@ -20,6 +20,7 @@ class Producto extends Model
         'precio_base',
         'descuento',
         'descripcion',
+        'estado'
     ];
 
     public function tamanoPapel()
