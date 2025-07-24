@@ -39,7 +39,7 @@ class OpcionProductoFactory extends Factory
                 'A colores',
                 'Blanco y Negro'
             ]),
-            'ajuste_precio' => fake()->randomFloat(2, -10, 50),
+            'ajuste_precio' => fake()->randomInt(0,100),
             'orden' => fake()->numberBetween(1, 10),
         ];
     }

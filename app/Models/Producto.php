@@ -18,4 +18,8 @@ class Producto extends Model
         'estado',
         'descripcion'
     ];
+
+ 
+
+
 }

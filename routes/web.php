@@ -9,6 +9,11 @@ use App\Http\Controllers\Admin\PagoController;
 use App\Http\Controllers\Admin\EnvioController;
 use App\Http\Controllers\Admin\PedidoController;
 
+use App\Http\Controllers\Client\InicioController;
+
+
+// Dashboard admin
+
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 Route::get('/admin/dashboard/pdf', [DashboardController::class, 'pdf'])->name('admin.dashboard.pdf');
 
@@ -47,6 +52,12 @@ Route::get('/admin/envios', [EnvioController::class, 'index'])->name('admin.envi
 Route::post('/admin/envios', [EnvioController::class, 'guardar'])->name('admin.envios.guardar');
 Route::put('/admin/envios/{envio}', [EnvioController::class, 'actualizar'])->name('admin.envios.actualizar');
 Route::patch('/admin/envios/{envio}/estado', [EnvioController::class, 'eliminar'])->name('admin.envios.eliminar');
+
+
+// --- Usuarios ---
+Route::get('/inicio', [InicioController::class, 'index'])->name('client.inicio');
+// Detalle de producto
+Route::get('/producto/{id}', [App\Http\Controllers\Client\ProductoController::class, 'detalle'])->name('producto.detalle');
 
 /*
 Route::middleware(['auth', 'rol:cliente'])->group(function () {
