@@ -4,15 +4,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\CotizacionOpcion;
+use App\Models\TamanoPapel;
 
-class CotizacionOpcionesSeeder extends Seeder
+class TamanoPapelSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        CotizacionOpcion::factory()->count(20)->create();
+        TamanoPapel::factory()->count(1)->create();
     }
 }

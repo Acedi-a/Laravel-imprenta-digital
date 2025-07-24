@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('opciones_producto', function (Blueprint $table) {
+        Schema::create('foto_referenciales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('producto_id')->constrained('productos');
-            $table->string('nombre_opcion');
-            $table->string('valor_opcion');
-            $table->decimal('ajuste_precio');
-            $table->integer('orden');
+            $table->foreignId('tamano_papel_id')->constrained('tamano_papel')->onDelete('cascade');
+            $table->string('url'); // Ruta o URL de la imagen
+            $table->string('descripcion')->nullable(); // Descripción opcional
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('opciones_producto');
+        Schema::dropIfExists('fotos_referenciales');
     }
 };

@@ -4,27 +4,31 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Producto;
+use App\Models\TamanoPapel;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
     public function index()
     {
-        $productos = Producto::orderBy('id','desc')->paginate(20);
-        return view('Admin.Productos.Index', compact('productos'));
+        $productos = Producto::with('tamanoPapel')->orderBy('id','desc')->paginate(20);
+        $tamanosPapel = TamanoPapel::all();
+        return view('Admin.Productos.Index', compact('productos', 'tamanosPapel'));
     }
 
     public function guardar(Request $request)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'categoria'   => 'required|string|max:255',
-            'precio'      => 'required|numeric|min:0',
-            'tipo_unidad' => 'required|string|max:50',
-            'ancho_max'   => 'required|numeric|min:0',
-            'alto_max'    => 'required|numeric|min:0',
-            'estado'      => 'required|in:activo,inactivo,agotado',
-            'descripcion' => 'nullable|string',
+            'nombre'          => 'required|string|max:255',
+            'tipo_impresion'  => 'required|string|max:255',
+            'tipo_papel'      => 'nullable|string|max:255',
+            'acabado'         => 'nullable|string|max:255',
+            'color'           => 'nullable|string|max:255',
+            'tamano_papel_id' => 'nullable|exists:tamano_papel,id',
+            'cantidad_minima' => 'required|integer|min:1',
+            'precio_base'     => 'required|numeric|min:0',
+            'descuento'       => 'nullable|numeric|min:0',
+            'descripcion'     => 'nullable|string',
         ]);
 
         Producto::create($request->all());
@@ -34,14 +38,16 @@ class ProductoController extends Controller
     public function actualizar(Request $request, Producto $producto)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'categoria'   => 'required|string|max:255',
-            'precio'      => 'required|numeric|min:0',
-            'tipo_unidad' => 'required|string|max:50',
-            'ancho_max'   => 'required|numeric|min:0',
-            'alto_max'    => 'required|numeric|min:0',
-            'estado'      => 'required|in:activo,inactivo,agotado',
-                'descripcion' => 'nullable|string',
+            'nombre'          => 'required|string|max:255',
+            'tipo_impresion'  => 'required|string|max:255',
+            'tipo_papel'      => 'nullable|string|max:255',
+            'acabado'         => 'nullable|string|max:255',
+            'color'           => 'nullable|string|max:255',
+            'tamano_papel_id' => 'nullable|exists:tamano_papel,id',
+            'cantidad_minima' => 'required|integer|min:1',
+            'precio_base'     => 'required|numeric|min:0',
+            'descuento'       => 'nullable|numeric|min:0',
+            'descripcion'     => 'nullable|string',
         ]);
 
         $producto->update($request->all());

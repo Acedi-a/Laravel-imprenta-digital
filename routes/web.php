@@ -21,6 +21,7 @@ Route::get('/admin/dashboard/pdf', [DashboardController::class, 'pdf'])->name('a
 Route::get('/admin/productos',[ProductoController::class,'index'])->name('admin.productos.index');
 Route::post('/admin/productos', [ProductoController::class, 'guardar'])->name('admin.productos.guardar');
 Route::put('/admin/productos/{producto}',[ProductoController::class, 'actualizar'])->name('admin.productos.actualizar');
+Route::delete('/admin/productos/{producto}',[ProductoController::class, 'eliminar'])->name('admin.productos.eliminar');
 
 // Usuarios admin
 Route::get('/admin/usuarios', [UsuarioController::class, 'index'])->name('admin.usuarios.index');

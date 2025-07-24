@@ -2,39 +2,53 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Usuario;
 use App\Models\Producto;
-use App\Models\Archivo;
+use App\Models\TamanoPapel;
+use App\Models\FotoReferencial;
 use App\Models\Cotizacion;
-use App\Models\Pedido;
 use App\Models\Direccion;
-use App\Models\Envio;
+use App\Models\Archivo;
+use App\Models\Pedido;
 use App\Models\Pago;
 use App\Models\HistorialEstado;
+use App\Models\Envio;
 use App\Models\Notificacion;
 
 class FlujoPrincipalSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     * 
-     * Este seeder crea el flujo completo de la imprenta:
-     * Usuario → Cotización → Pedido → Envío
-     * Con todas las entidades relacionadas
-     */
+   
     public function run(): void
     {
         // Crear 5 usuarios clientes
         $usuarios = Usuario::factory()
             ->count(5)
             ->create();
+        $this->command->info(string: 'Usuarios creados');
 
-        // Crear productos disponibles
+
+        // Crear tamaños de papel
+        $tamanoPapeles = TamanoPapel::factory()
+            ->count(6)
+            ->create();
+        $this->command->info(string: 'Tamaños de papel creados');
+
+        // Crear fotos referenciales para cada tamaño de papel
+        foreach ($tamanoPapeles as $tamanoPapel) {
+            FotoReferencial::factory()
+                ->count(rand(2, 4))
+                ->create([
+                    'tamano_papel_id' => $tamanoPapel->id
+                ]);
+        }
+        $this->command->info(string: 'Fotos referenciales creadas');
+
+        // Crear productos disponibles (el factory ya crea el tamaño papel)
         $productos = Producto::factory()
             ->count(10)
             ->create();
+        $this->command->info(string: 'Productos creados');
 
         foreach ($usuarios as $usuario) {
             // Crear direcciones para el usuario
@@ -53,7 +67,7 @@ class FlujoPrincipalSeeder extends Seeder
             foreach ($cotizaciones as $cotizacion) {
                 if ($cotizacion->estado === 'aprobada' || rand(1, 3) === 1) {
                     $cotizacion->update(['estado' => 'aprobada']);
-                    
+
                     // Crear pedido basado en la cotización
                     $pedido = Pedido::factory()
                         ->create([
@@ -114,13 +128,7 @@ class FlujoPrincipalSeeder extends Seeder
                 ]);
         }
 
-        $this->command->info('✅ Flujo principal completado:');
-        $this->command->info("   - {$usuarios->count()} usuarios creados");
-        $this->command->info("   - {$productos->count()} productos creados");
-        $this->command->info("   - " . Cotizacion::count() . " cotizaciones creadas");
-        $this->command->info("   - " . Pedido::count() . " pedidos creados");
-        $this->command->info("   - " . Envio::count() . " envíos creados");
-        $this->command->info("   - " . Pago::count() . " pagos creados");
-        $this->command->info("   - " . Notificacion::count() . " notificaciones creadas");
+        $this->command->info(string: 'Ejecucion de seeder padre completo');
     }
+
 }

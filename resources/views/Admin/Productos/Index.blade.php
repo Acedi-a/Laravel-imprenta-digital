@@ -17,10 +17,10 @@
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo Impresión</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio base</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ancho / Alto máx (cm)</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descuento</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tamaño papel</th>
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
         </thead>
@@ -29,20 +29,22 @@
             <tr>
                 <td class="px-6 py-4 text-sm text-gray-900">{{ $p->id }}</td>
                 <td class="px-6 py-4 text-sm text-gray-900">{{ $p->nombre }}</td>
-                <td class="px-6 py-4 text-sm text-gray-900">{{ $p->categoria }}</td>
-                <td class="px-6 py-4 text-sm text-gray-900">${{ number_format($p->precio, 2) }}</td>
-                <td class="px-6 py-4">
-                    <span class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full {{ $p->estado == 'activo' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                        {{ ucfirst($p->estado) }}
-                    </span>
+                <td class="px-6 py-4 text-sm text-gray-900">{{ $p->tipo_impresion }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">${{ number_format($p->precio_base, 2) }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">{{ $p->descuento ? number_format($p->descuento, 2) . '%' : 'N/A' }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">
+                    @if($p->tamanoPapel)
+                        {{ $p->tamanoPapel->nombre }} ({{ $p->tamanoPapel->ancho }}x{{ $p->tamanoPapel->alto }} {{ $p->tamanoPapel->unidad_medida }})
+                    @else
+                        N/A
+                    @endif
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900">{{ $p->ancho_max }} / {{ $p->alto_max }}</td>
                 <td class="px-6 py-4 text-right text-sm font-medium space-x-2">
                     <button class="btnEdit text-indigo-600 hover:text-indigo-900"
                             data-json="{{ $p->toJson() }}">Editar</button>
-                    <form action="{{ route('admin.productos.actualizar', $p->id) }}" method="POST" class="inline-block">
+                    <form action="{{ route('admin.productos.eliminar', $p->id) }}" method="POST" class="inline-block">
                         @csrf @method('DELETE')
-                        <button class="text-red-600 hover:text-red-900" onclick="return confirm('¿Eliminar producto?')">
+                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Eliminar producto?')">
                             Eliminar
                         </button>
                     </form>
@@ -70,32 +72,59 @@
                     <input name="nombre" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Categoría</label>
-                    <input name="categoria" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Precio base</label>
-                    <input type="number" step="0.01" name="precio" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Tipo unidad</label>
-                    <input name="tipo_unidad" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Ancho máx (cm)</label>
-                    <input type="number" step="0.01" name="ancho_max" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Alto máx (cm)</label>
-                    <input type="number" step="0.01" name="alto_max" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Estado</label>
-                    <select name="estado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                        <option value="agotado">Agotado</option>
+                    <label class="block text-sm font-medium text-gray-700">Tipo de Impresión</label>
+                    <select name="tipo_impresion" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="Digital">Digital</option>
+                        <option value="Offset">Offset</option>
+                        <option value="Gran formato">Gran formato</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tipo de Papel</label>
+                    <select name="tipo_papel" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="Couché">Couché</option>
+                        <option value="Bond">Bond</option>
+                        <option value="Opalina">Opalina</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Acabado</label>
+                    <select name="acabado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="Laminado">Laminado</option>
+                        <option value="Troquelado">Troquelado</option>
+                        <option value="Barniz">Barniz</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Color</label>
+                    <select name="color" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="Color">Color</option>
+                        <option value="B/N">Blanco y Negro</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tamaño de Papel</label>
+                    <select name="tamano_papel_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Seleccionar...</option>
+                        @foreach($tamanosPapel as $tamano)
+                            <option value="{{ $tamano->id }}">{{ $tamano->nombre }} ({{ $tamano->ancho }}x{{ $tamano->alto }} {{ $tamano->unidad_medida }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Cantidad Mínima</label>
+                    <input type="number" min="1" name="cantidad_minima" value="1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Precio Base</label>
+                    <input type="number" step="0.01" name="precio_base" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Descuento (%)</label>
+                    <input type="number" step="0.01" min="0" max="100" name="descuento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Descripción</label>

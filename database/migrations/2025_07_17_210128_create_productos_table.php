@@ -6,29 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->string('categoria');
             $table->string('nombre');
-            $table->decimal('precio');
-            $table->string('tipo_unidad');
-            $table->decimal('ancho_max');
-            $table->decimal('alto_max');
-            $table->string('estado');
-            $table->string('descripcion');
+            $table->string(column: 'tipo_impresion'); // Digital, Offset, Gran formato
+            $table->string('tipo_papel')->nullable(); // Couché, Bond, Opalina
+            $table->string('acabado')->nullable(); // Laminado, Troquelado, Barniz
+            $table->string('color')->nullable(); // Color, B/N
+            $table->foreignId('tamano_papel_id')->nullable()->constrained('tamano_papel');
+            $table->integer('cantidad_minima')->default(1);
+            $table->decimal('precio_base', 10, 2);
+            $table->decimal('descuento', 5, 2)->nullable();
+            $table->text('descripcion')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('productos');
     }

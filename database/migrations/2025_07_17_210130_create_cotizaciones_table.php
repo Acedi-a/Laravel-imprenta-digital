@@ -6,29 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('cotizaciones', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('usuarios');  
+            $table->foreignId('usuario_id')->constrained('usuarios');
             $table->foreignId('producto_id')->constrained('productos');
-            $table->foreignId('archivo_id')->constrained('archivos');
+            $table->foreignId('archivo_id')->nullable()->constrained('archivos');
             $table->integer('cantidad');
-            $table->decimal('ancho');
-            $table->decimal('alto');
-            $table->decimal('precio_total');
-            $table->string('estado');
+            $table->decimal('precio_total', 10, 2);
+            $table->enum('estado', ['pendiente', 'aprobada', 'rechazada', 'vencida'])->default('pendiente');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('cotizaciones');
     }

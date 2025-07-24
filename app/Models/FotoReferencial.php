@@ -5,20 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Producto extends Model
+class FotoReferencial extends Model
 {
     use HasFactory;
 
+    protected $table = 'foto_referenciales'; 
+
     protected $fillable = [
-        'nombre',
-        'tipo_impresion',
-        'tipo_papel',
-        'acabado',
-        'color',
-        'tamano_papel_id', // Relación con TamanoPapel
-        'cantidad_minima',
-        'precio_base',
-        'descuento',
+        'tamano_papel_id',
+        'url',
         'descripcion',
     ];
 
