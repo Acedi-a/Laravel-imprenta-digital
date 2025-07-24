@@ -66,7 +66,7 @@ Route::patch('/admin/envios/{envio}/estado', [EnvioController::class, 'eliminar'
 // --- Usuarios ---
 Route::get('/inicio', [InicioController::class, 'index'])->name('client.inicio');
 // Detalle de producto
-Route::get('/producto/{id}', [App\Http\Controllers\Client\ProductoController::class, 'detalle'])->name('producto.detalle');
+Route::get('/producto/{id}', [App\Http\Controllers\Client\ProductoController::class, 'detalle'])->name('client.producto-detalle');
 
 /*
 Route::middleware(['auth', 'rol:cliente'])->group(function () {

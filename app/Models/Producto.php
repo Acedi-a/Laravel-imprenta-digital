@@ -15,7 +15,7 @@ class Producto extends Model
         'tipo_papel',
         'acabado',
         'color',
-        'tamano_papel_id', // Relación con TamanoPapel
+        'tamano_papel_id', 
         'cantidad_minima',
         'precio_base',
         'descuento',
@@ -23,8 +23,11 @@ class Producto extends Model
         'estado'
     ];
 
+
     public function tamanoPapel()
     {
-        return $this->belongsTo(TamanoPapel::class);
+        return $this->belongsTo(TamanoPapel::class, 'tamano_papel_id');
     }
+
+
 }

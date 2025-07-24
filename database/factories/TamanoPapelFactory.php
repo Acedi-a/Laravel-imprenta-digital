@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\TamanoPapel;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\FotoReferencial;
 
 class TamanoPapelFactory extends Factory
 {
@@ -19,4 +20,7 @@ class TamanoPapelFactory extends Factory
             'unidad_medida' => $this->faker->randomElement(['mm', 'cm', 'in']),
         ];
     }
+
+ 
+
 }

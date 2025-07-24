@@ -17,13 +17,10 @@ class TamanoPapel extends Model
         'unidad_medida'
     ];
 
-    public function productos()
-    {
-        return $this->hasMany(Producto::class);
-    }
-
     public function fotosReferenciales()
     {
-        return $this->hasMany(FotoReferencial::class);
+        return $this->hasMany(FotoReferencial::class, 'tamano_papel_id');
     }
+
+
 }

@@ -50,6 +50,11 @@
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             color: #4f46e5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
         }
     </style>
 @endsection
@@ -72,7 +77,7 @@
                class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105">
                 Ver Productos <i class="fas fa-arrow-right ml-2"></i>
             </a>
-            <a href="#"
+            <a href="#como-funciona"
                class="inline-flex items-center px-8 py-3 border-2 border-indigo-200 text-indigo-600 font-bold rounded-full hover:bg-indigo-50 transition">
                 Cómo funciona <i class="fas fa-question-circle ml-2"></i>
             </a>
@@ -105,7 +110,7 @@
 </section>
 
 <!-- CARDS RÁPIDAS -->
-<section class="py-12 bg-white">
+<section class="py-12 bg-white" id="como-funciona">
     <div class="container mx-auto px-6">
         <h2 class="text-3xl font-bold mb-12 text-center">Tu espacio de trabajo</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -175,26 +180,25 @@
                     <div class="swiper-slide">
                         <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col">
                             <div class="h-56 overflow-hidden rounded-t-2xl">
-                                <!-- Enlace al detalle del producto (pasa el ID) -->
-                                <a href="{{ route('producto.detalle', $p->id) }}">
-                                    <img src="https://via.placeholder.com/400x300?text={{ $p->nombre }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                                <a href="{{ route('client.producto-detalle', $p->id) }}">
+                                    <img src="https://via.placeholder.com/400x300?text={{ urlencode($p->nombre) }}" alt="{{ $p->nombre }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                                 </a>
                             </div>
                             <div class="p-6 flex flex-col flex-grow">
                                 <div class="flex justify-between items-start mb-3">
-                                    <!-- Título también enlazado -->
-                                    <a href="{{ route('producto.detalle', $p->id) }}" class="font-bold text-xl hover:text-indigo-600">
+                                    <a href="{{ route('client.producto-detalle', $p->id) }}" class="font-bold text-xl hover:text-indigo-600">
                                         {{ $p->nombre }}
                                     </a>
+                                    @if($p->created_at->diffInDays(now()) < 30)
                                     <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">Nuevo</span>
+                                    @endif
                                 </div>
                                 <p class="text-gray-600 text-sm mb-4 flex-grow">{{ Str::limit($p->descripcion, 80) }}</p>
                                 <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-indigo-600 font-bold text-2xl">${{ number_format($p->precio, 2) }}</span>
+                                    <span class="text-indigo-600 font-bold text-2xl">${{ number_format($p->precio_base, 2) }}</span>
                                     <div class="flex space-x-2">
-                                        <!-- Botón "Ver detalles" -->
-                                        <a href="{{ route('producto.detalle', $p->id) }}"
-                                        class="border border-indigo-200 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-indigo-50 transition">
+                                        <a href="{{ route('client.producto-detalle', $p->id) }}"
+                                           class="border border-indigo-200 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-indigo-50 transition">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -215,15 +219,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="bg-gray-50 rounded-2xl p-8">
                 <div class="flex items-center mb-4">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full mr-4">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="María López" class="w-12 h-12 rounded-full mr-4">
                     <div>
                         <h4 class="font-bold">María López</h4>
                         <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
                     </div>
                 </div>
@@ -231,15 +231,11 @@
             </div>
             <div class="bg-gray-50 rounded-2xl p-8">
                 <div class="flex items-center mb-4">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full mr-4">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos Méndez" class="w-12 h-12 rounded-full mr-4">
                     <div>
                         <h4 class="font-bold">Carlos Méndez</h4>
                         <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                         </div>
                     </div>
                 </div>
@@ -247,15 +243,11 @@
             </div>
             <div class="bg-gray-50 rounded-2xl p-8">
                 <div class="flex items-center mb-4">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-12 h-12 rounded-full mr-4">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana Martínez" class="w-12 h-12 rounded-full mr-4">
                     <div>
                         <h4 class="font-bold">Ana Martínez</h4>
                         <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
                     </div>
                 </div>
@@ -272,7 +264,7 @@
         <div class="bg-white rounded-2xl shadow-sm p-6">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Notificaciones Recientes</h2>
-                <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Ver todas</a>
+                <a href="{{ route('client.notificaciones') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Ver todas</a>
             </div>
             <div class="space-y-4">
                 @foreach($notificaciones as $n)
