@@ -30,4 +30,10 @@ class Usuario extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed', // si usas Laravel 10+ (opcional)
     ];
+
+    public function notificaciones()
+    {
+
+        return $this->hasMany(Notificacion::class, 'usuario_id');
+    }
 }

@@ -3,60 +3,75 @@
 @section('title', 'Inicio | Cliente')
 
 @section('head')
-    <!-- Swiper CDN CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .gradient-text {
-            background: linear-gradient(90deg, #4f46e5, #ec4899, #f59e0b);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: gradient 5s ease infinite;
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .gradient-text {
+        background: linear-gradient(90deg, #4f46e5, #ec4899, #f59e0b);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradient 5s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        50% {
+            background-position: 100% 50%;
         }
 
-        .floating {
-            animation: floating 3s ease-in-out infinite;
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+        0% {
+            transform: translateY(0px);
         }
 
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        50% {
+            transform: translateY(-10px);
         }
 
-        .card-hover {
-            transition: all 0.3s ease;
-            transform: translateY(0);
+        100% {
+            transform: translateY(0px);
         }
+    }
 
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
+    .card-hover {
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    }
 
-        .custom-swiper-button-next, .custom-swiper-button-prev {
-            background-color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            color: #4f46e5;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-        }
-    </style>
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-swiper-button-next,
+    .custom-swiper-button-prev {
+        background-color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        color: #4f46e5;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -74,11 +89,11 @@
         </p>
         <div class="flex justify-center space-x-4">
             <a href="#"
-               class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105">
+                class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105">
                 Ver Productos <i class="fas fa-arrow-right ml-2"></i>
             </a>
             <a href="#como-funciona"
-               class="inline-flex items-center px-8 py-3 border-2 border-indigo-200 text-indigo-600 font-bold rounded-full hover:bg-indigo-50 transition">
+                class="inline-flex items-center px-8 py-3 border-2 border-indigo-200 text-indigo-600 font-bold rounded-full hover:bg-indigo-50 transition">
                 Cómo funciona <i class="fas fa-question-circle ml-2"></i>
             </a>
         </div>
@@ -177,35 +192,35 @@
         <div class="swiper">
             <div class="swiper-wrapper">
                 @foreach($productos as $p)
-                    <div class="swiper-slide">
-                        <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col">
-                            <div class="h-56 overflow-hidden rounded-t-2xl">
-                                <a href="{{ route('client.producto-detalle', $p->id) }}">
-                                    <img src="https://via.placeholder.com/400x300?text={{ urlencode($p->nombre) }}" alt="{{ $p->nombre }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                <div class="swiper-slide">
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+                        <div class="h-56 overflow-hidden rounded-t-2xl">
+                            <a href="{{ route('client.producto-detalle', $p->id) }}">
+                                <img src="https://via.placeholder.com/400x300?text={{ urlencode($p->nombre) }}" alt="{{ $p->nombre }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            </a>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-3">
+                                <a href="{{ route('client.producto-detalle', $p->id) }}" class="font-bold text-xl hover:text-indigo-600">
+                                    {{ $p->nombre }}
                                 </a>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <div class="flex justify-between items-start mb-3">
-                                    <a href="{{ route('client.producto-detalle', $p->id) }}" class="font-bold text-xl hover:text-indigo-600">
-                                        {{ $p->nombre }}
-                                    </a>
-                                    @if($p->created_at->diffInDays(now()) < 30)
+                                @if($p->created_at->diffInDays(now()) < 30)
                                     <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">Nuevo</span>
                                     @endif
-                                </div>
-                                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ Str::limit($p->descripcion, 80) }}</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-indigo-600 font-bold text-2xl">${{ number_format($p->precio_base, 2) }}</span>
-                                    <div class="flex space-x-2">
-                                        <a href="{{ route('client.producto-detalle', $p->id) }}"
-                                           class="border border-indigo-200 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-indigo-50 transition">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4 flex-grow">{{ Str::limit($p->descripcion, 80) }}</p>
+                            <div class="flex justify-between items-center mt-auto">
+                                <span class="text-indigo-600 font-bold text-2xl">${{ number_format($p->precio_base, 2) }}</span>
+                                <div class="flex space-x-2">
+                                    <a href="{{ route('client.producto-detalle', $p->id) }}"
+                                        class="border border-indigo-200 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-indigo-50 transition">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -268,16 +283,16 @@
             </div>
             <div class="space-y-4">
                 @foreach($notificaciones as $n)
-                    <div class="bg-white rounded-xl p-4 flex items-start space-x-4 border border-gray-100 hover:shadow-sm transition">
-                        <div class="w-3 h-3 mt-2 rounded-full" style="background-color: {{ $loop->first ? '#ec4899' : ($loop->index == 1 ? '#f59e0b' : '#4f46e5') }}"></div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <p class="font-semibold">{{ $n->titulo }}</p>
-                                <span class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($n->created_at)->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-sm text-gray-700">{{ $n->mensaje }}</p>
+                <div class="bg-white rounded-xl p-4 flex items-start space-x-4 border border-gray-100 hover:shadow-sm transition">
+                    <div class="w-3 h-3 mt-2 rounded-full" style="background-color: gray"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <p class="font-semibold">{{ $n->titulo }}</p>
+                            <span class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($n->created_at)->diffForHumans() }}</span>
                         </div>
+                        <p class="text-sm text-gray-700">{{ $n->mensaje }}</p>
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -292,11 +307,11 @@
         <p class="text-xl text-indigo-100 max-w-2xl mx-auto mb-8">Sube tu diseño ahora y recibe tu cotización en minutos</p>
         <div class="flex justify-center space-x-4">
             <a href="#"
-               class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105">
+                class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105">
                 <i class="fas fa-upload mr-2"></i> Subir diseño
             </a>
             <a href="#"
-               class="inline-flex items-center px-8 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-indigo-600 transition">
+                class="inline-flex items-center px-8 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-indigo-600 transition">
                 <i class="fas fa-phone-alt mr-2"></i> Contactar ventas
             </a>
         </div>
@@ -305,29 +320,29 @@
 @endsection
 
 @section('scripts')
-    <!-- Swiper CDN JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            new Swiper('.swiper', {
-                slidesPerView: 1,
-                spaceBetween: 20,
-                loop: true,
-                navigation: {
-                    nextEl: '.custom-swiper-button-next',
-                    prevEl: '.custom-swiper-button-prev',
+<!-- Swiper CDN JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        new Swiper('.swiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            navigation: {
+                nextEl: '.custom-swiper-button-next',
+                prevEl: '.custom-swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
                 },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 20,
-                    },
-                }
-            });
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 20,
+                },
+            }
         });
-    </script>
+    });
+</script>
 @endsection

@@ -56,7 +56,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/pedidos', [PedidoController::class, 'index'])->name('admin.pedidos.index');
     Route::post('/admin/pedidos', [PedidoController::class, 'guardar'])->name('admin.pedidos.guardar');
     Route::put('/admin/pedidos/{pedido}', [PedidoController::class, 'actualizar'])->name('admin.pedidos.actualizar');
-    Route::patch('/pedidos/{pedido}/estado', [PedidoController::class, 'eliminar'])->name('admin.pedidos.eliminar');
+    Route::patch('/admin/pedidos/{pedido}/estado', [PedidoController::class, 'eliminar'])->name('admin.pedidos.eliminar');
 
 
     // Pagos admin
@@ -76,8 +76,43 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 Route::middleware(['auth', 'role:cliente'])->group(function () {
+    // Inicio
     Route::get('/inicio', [InicioController::class, 'index'])->name('client.inicio');
-    // Detalle de producto
+    
+    // Productos
+    Route::get('/productos', [App\Http\Controllers\Client\ProductoController::class, 'index'])->name('client.productos');
     Route::get('/producto/{id}', [App\Http\Controllers\Client\ProductoController::class, 'detalle'])->name('client.producto-detalle');
+    
+    // Cotizaciones
+    Route::get('/cotizaciones', [App\Http\Controllers\Client\CotizacionController::class, 'index'])->name('client.cotizaciones');
+    Route::get('/cotizacion/crear', [App\Http\Controllers\Client\CotizacionController::class, 'mostrarFormulario'])->name('client.cotizacion-crear');
+    Route::post('/cotizacion/crear', [App\Http\Controllers\Client\CotizacionController::class, 'crear'])->name('client.cotizacion-store');
+    Route::get('/cotizacion/{id}', [App\Http\Controllers\Client\CotizacionController::class, 'detalle'])
+        ->name('client.cotizacion-detalle')
+        ->where('id', '[0-9]+');
+
+    //Pedidso
+    Route::post('/pedido/crear/{cotizacion}', [App\Http\Controllers\Client\PedidoController::class, 'crear'])
+        ->name('client.pedido-crear')  // ← Sin "name:"
+        ->where('cotizacion', '[0-9]+');
+    Route::get('/pedido/{id}/seguimiento', [App\Http\Controllers\Client\PedidoController::class, 'seguimiento'])
+        ->name('client.pedido-seguimiento')
+        ->where('id', '[0-9]+');
+    Route::get('/pedido/{id}', [App\Http\Controllers\Client\PedidoController::class, 'detalle'])
+        ->name('client.pedido-detalle')
+        ->where('id', '[0-9]+');
+    Route::get('/pedidos', [App\Http\Controllers\Client\PedidoController::class, 'index'])->name('client.pedidos');
+
+    // Archivos
+    Route::get('/archivos', [App\Http\Controllers\Client\ArchivoController::class, 'index'])->name('client.archivos');
+    Route::post('/archivo/subir', [App\Http\Controllers\Client\ArchivoController::class, 'subir'])->name('client.archivo-subir');
+    Route::get('/archivo/{id}/descargar', [App\Http\Controllers\Client\ArchivoController::class, 'descargar'])->name('client.archivo-descargar');
+    Route::delete('/archivo/{id}', [App\Http\Controllers\Client\ArchivoController::class, 'eliminar'])->name('client.archivo-eliminar');
+    
+    // Notificaciones
+    Route::get('/notificaciones', [App\Http\Controllers\Client\NotificacionController::class, 'index'])->name('client.notificaciones');
+    Route::patch('/notificacion/{id}/leida', [App\Http\Controllers\Client\NotificacionController::class, 'marcarLeida'])->name('client.notificacion-leida');
+    Route::patch('/notificaciones/todas-leidas', [App\Http\Controllers\Client\NotificacionController::class, 'marcarTodasLeidas'])->name('client.notificaciones-todas-leidas');
+    Route::delete('/notificacion/{id}', [App\Http\Controllers\Client\NotificacionController::class, 'eliminar'])->name('client.notificacion-eliminar');
 });
 // --- Usuarios ---

@@ -44,23 +44,26 @@
                     <i class="fas fa-print mr-2"></i> Imprenta
                 </h2>
                 <nav class="space-y-1">
-                    <a href="{{ route('client.inicio') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center">
+                    <a href="{{ route('client.inicio') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.inicio') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-home mr-2"></i> Inicio
                     </a>
-                    <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center">
+                    <a href="{{ route('client.productos') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.productos') || request()->routeIs('client.producto-detalle') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-box mr-2"></i> Productos
                     </a>
-                    <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center">
+                    <a href="{{ route('client.cotizaciones') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.cotizaciones') || request()->routeIs('client.cotizacion-detalle') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-file-invoice-dollar mr-2"></i> Mis Cotizaciones
                     </a>
-                    <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center">
+                    <a href="{{ route('client.pedidos') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.pedidos') || request()->routeIs('client.pedido-detalle') || request()->routeIs('client.pedido-seguimiento') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-shopping-cart mr-2"></i> Mis Pedidos
                     </a>
-                    <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center">
+                    <a href="{{ route('client.archivos') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.archivos') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-file-alt mr-2"></i> Mis Archivos
                     </a>
-                    <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center">
+                    <a href="{{ route('client.notificaciones') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.notificaciones') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-bell mr-2"></i> Notificaciones
+                        @if(Auth::check() && Auth::user()->notificaciones()->where('leido', false)->count() > 0)
+                            <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{{ Auth::user()->notificaciones()->where('leido', false)->count() }}</span>
+                        @endif
                     </a>
                 </nav>
             </div>
@@ -75,7 +78,7 @@
         </aside>
         {{-- Contenido principal --}}
         <main class="main-content p-6">
-            {{-- Header superior --}}
+            {{-- Heºer superior --}}
             <header class="mb-6">
                 <h1 class="text-2xl font-bold">@yield('title', 'Panel del Cliente')</h1>
             </header>
