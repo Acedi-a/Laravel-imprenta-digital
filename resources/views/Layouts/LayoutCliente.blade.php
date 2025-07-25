@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,22 +10,31 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
         .sidebar {
-            height: 100vh; /* Altura completa de la ventana */
-            position: fixed; /* Posición fija */
-            width: 16rem; /* Ancho fijo igual al w-64 de Tailwind */
+            height: 100vh;
+            /* Altura completa de la ventana */
+            position: fixed;
+            /* Posición fija */
+            width: 16rem;
+            /* Ancho fijo igual al w-64 de Tailwind */
         }
+
         .main-content {
-            margin-left: 16rem; /* Margen izquierdo igual al ancho del sidebar */
-            width: calc(100% - 16rem); /* Ancho del contenido principal ajustado */
+            margin-left: 16rem;
+            /* Margen izquierdo igual al ancho del sidebar */
+            width: calc(100% - 16rem);
+            /* Ancho del contenido principal ajustado */
         }
+
         .sidebar-link {
             transition: all 0.3s ease;
         }
+
         .sidebar-link:hover {
             transform: translateX(5px);
         }
     </style>
 </head>
+
 <body class="bg-gray-100 text-gray-900">
     <div class="flex">
         {{-- Sidebar --}}
@@ -55,7 +65,7 @@
                 </nav>
             </div>
             <div class="mt-6">
-                <form method="POST">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full text-left px-3 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition duration-300 flex items-center">
                         <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
@@ -79,4 +89,5 @@
     </footer>
     @stack('scripts')
 </body>
+
 </html>

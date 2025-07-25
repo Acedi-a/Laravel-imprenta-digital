@@ -115,7 +115,7 @@
                 </nav>
 
                 <div class="mt-8 pt-4 border-t border-gray-200">
-                    <form method="POST">
+                    <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="w-full flex items-center justify-center p-3 rounded-xl bg-gray-50 text-gray-600 hover:bg-red-500 hover:text-white transition-colors duration-300 group">
                             <i class="fas fa-sign-out-alt w-6 icon transition-transform group-hover:scale-110"></i>

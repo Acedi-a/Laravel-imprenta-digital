@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Usuario>
@@ -17,13 +18,21 @@ class UsuarioFactory extends Factory
      */
     public function definition(): array
     {
+        $array_contraseñas = [
+            'admin123',
+            'cliente123'
+        ];
+        static $index = 0;
+
         return [
             'email' => fake()->unique()->safeEmail(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make($array_contraseñas[$index++ % count($array_contraseñas)]),
             'nombre' => fake()->firstName(),
             'apellido' => fake()->lastName(),
-            'rol' => fake()->randomElement(['admin', 'cliente', 'empleado']),
+            'rol' => fake()->randomElement(['admin', 'cliente']),
             'telefono' => fake()->phoneNumber(),
+            'email_verified_at' => now(),                
+            'remember_token' => Str::random(10),         
         ];
     }
 

@@ -6,8 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class VerificarRol
+class RoleMiddleware
 {
+    public static string $middlewareGroup = 'role';
+
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $usuario = Auth::user();
