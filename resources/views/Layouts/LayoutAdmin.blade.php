@@ -86,10 +86,6 @@
                         <i class="fas fa-paperclip fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Tamaños de Papel</span>
                     </a>
-                    <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
-                        <i class="fas fa-tags fa-lg w-6 icon transition-transform"></i>
-                        <span class="ml-4 nav-text">Categorías</span>
-                    </a>
                     <a href="{{ route('admin.usuarios.index') }}" class="nav-link flex items-center p-3 rounded-xl text-gray-600 hover:text-indigo-600">
                         <i class="fas fa-users fa-lg w-6 icon transition-transform"></i>
                         <span class="ml-4 nav-text">Usuarios</span>

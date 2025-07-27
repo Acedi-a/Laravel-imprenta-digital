@@ -32,7 +32,8 @@ class UsuarioFactory extends Factory
             'rol' => fake()->randomElement(['admin', 'cliente']),
             'telefono' => fake()->phoneNumber(),
             'email_verified_at' => now(),                
-            'remember_token' => Str::random(10),         
+            'remember_token' => Str::random(10),
+            'estado' => fake()->randomElement(['activo', 'inactivo']),
         ];
     }
 

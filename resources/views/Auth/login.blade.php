@@ -51,8 +51,18 @@
                 Entrar
             </button>
         </form>
-        <div class="mt-6 text-center">
-            <a href="#" class="text-xs text-indigo-600 hover:underline">¿Olvidaste tu contraseña?</a>
+        
+        <div class="mt-6 text-center space-y-2">
+            <div class="flex items-center justify-center">
+                <div class="border-t border-gray-300 flex-grow mr-3"></div>
+                <span class="text-gray-500 text-sm">o</span>
+                <div class="border-t border-gray-300 flex-grow ml-3"></div>
+            </div>
+            <p class="text-sm text-gray-600">
+                ¿No tienes una cuenta? 
+                <a href="{{ route('signup') }}" class="text-indigo-600 font-medium hover:underline">Regístrate aquí</a>
+            </p>
+            <a href="#" class="block text-xs text-indigo-600 hover:underline">¿Olvidaste tu contraseña?</a>
         </div>
     </div>
 </body>

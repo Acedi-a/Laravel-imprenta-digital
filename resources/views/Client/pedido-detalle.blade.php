@@ -264,55 +264,33 @@
                     <h3 class="text-lg font-semibold text-indigo-800">Información de pago</h3>
                 </div>
                 <div class="p-6">
-                    @if($pedido->pagos && count($pedido->pagos) > 0)
-                        @foreach($pedido->pagos as $pago)
-                            <div class="mb-4 last:mb-0 p-3 {{ $pago->estado == 'completado' ? 'bg-green-50 border-l-4 border-green-400' : 'bg-yellow-50 border-l-4 border-yellow-400' }} rounded-lg">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-medium">Pago #{{ $pago->id }}</p>
-                                        <p class="text-sm text-gray-600">{{ $pago->created_at->format('d/m/Y H:i') }}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-bold">${{ number_format($pago->monto, 2) }}</p>
-                                        <p class="text-sm {{ $pago->estado == 'completado' ? 'text-green-600' : 'text-yellow-600' }}">
-                                            @if($pago->estado == 'completado')
-                                                <i class="fas fa-check-circle mr-1"></i> Completado
-                                            @elseif($pago->estado == 'pendiente')
-                                                <i class="fas fa-clock mr-1"></i> Pendiente
-                                            @elseif($pago->estado == 'fallido')
-                                                <i class="fas fa-times-circle mr-1"></i> Fallido
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-600"><span class="font-medium">Método:</span> {{ $pago->metodo_pago }}</p>
-                                    @if($pago->referencia)
-                                        <p class="text-sm text-gray-600"><span class="font-medium">Referencia:</span> {{ $pago->referencia }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-
-                        @if($pedido->saldo_pendiente > 0)
-                            <div class="mt-4 p-4 bg-blue-50 rounded-lg">
-                                <div class="flex justify-between items-center">
-                                    <p class="font-medium text-blue-800">Saldo pendiente:</p>
-                                    <p class="font-bold text-blue-800">${{ number_format($pedido->saldo_pendiente, 2) }}</p>
-                                </div>
-                                <div class="mt-3">
-                                    <a href="#" class="inline-block w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-lg transition duration-200">
-                                        <i class="fas fa-credit-card mr-1"></i> Completar pago
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
+                    @php
+                        $pagado = isset($pedido->saldo_pendiente) ? $pedido->saldo_pendiente <= 0 : false;
+                    @endphp
+                    @if(!$pagado && $pedido->estado != 'cancelado')
+                        <div class="py-6 text-center">
+                            <i class="fas fa-credit-card text-4xl text-indigo-500 mb-3"></i>
+                            <h4 class="text-lg font-medium text-gray-800 mb-2">Pago pendiente</h4>
+                            <p class="text-gray-600 mb-4">Puedes realizar el pago de tu pedido de forma segura y rápida.</p>
+                            <a href="{{ route('client.pago.pedido', $pedido->id) }}" class="inline-block py-3 px-6 bg-gradient-to-r from-green-500 to-indigo-600 hover:from-green-600 hover:to-indigo-700 text-white rounded-lg text-lg font-semibold shadow-lg transition duration-200">
+                                <i class="fas fa-money-check-alt mr-2"></i> Pagar pedido
+                            </a>
+                        </div>
+                    @elseif($pagado)
+                        <div class="py-6 text-center">
+                            <i class="fas fa-file-invoice-dollar text-4xl text-green-500 mb-3"></i>
+                            <h4 class="text-lg font-medium text-gray-800 mb-2">Pago realizado</h4>
+                            <p class="text-gray-600 mb-4">Tu pago ha sido registrado correctamente. Puedes descargar tu comprobante.</p>
+                            <a href="{{ route('client.pago.generar', $pedido->id) }}" class="inline-block py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200" target="_blank">
+                                <i class="fas fa-download mr-1"></i> Descargar ticket PDF
+                            </a>
+                        </div>
                     @else
                         <div class="py-6 text-center">
                             <i class="fas fa-exclamation-circle text-4xl text-yellow-400 mb-3"></i>
                             <h4 class="text-lg font-medium text-gray-800 mb-2">No hay pagos registrados</h4>
                             <p class="text-gray-600 mb-4">No se han registrado pagos para este pedido.</p>
-                            <a href="#" class="inline-block py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition duration-200">
+                            <a href="{{ route('client.pago.pedido', $pedido->id) }}" class="inline-block py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition duration-200">
                                 <i class="fas fa-credit-card mr-1"></i> Realizar pago
                             </a>
                         </div>

@@ -19,7 +19,7 @@ class PedidoFactory extends Factory
     {
         return [
             'cotizacion_id' => Cotizacion::factory(),
-            'numero_pedido' => fake()->unique()->numberBetween(1000, 99999),
+            'numero_pedido' => fake()->uuid(),
             'estado' => fake()->randomElement(['pendiente', 'en_proceso', 'completado', 'cancelado']),
             'prioridad' => fake()->randomElement(['baja', 'media', 'alta', 'urgente']),
             'notas' => fake()->optional()->text(200),

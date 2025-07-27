@@ -45,13 +45,51 @@
             </div>
             <div class="flex space-x-3">
                 @if($cotizacion->estado == 'aprobada')
-                    <button onclick="confirmarPedido('{{ $cotizacion->id }}')" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition duration-200">
+                    <button onclick="abrirModalPedido('{{ $cotizacion->id }}')" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
                         <i class="fas fa-shopping-cart mr-2"></i> Realizar pedido
                     </button>
                 @endif
                 <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition duration-200">
                     <i class="fas fa-print mr-2"></i> Imprimir
                 </button>
+<!-- Modal para realizar pedido -->
+<div id="modalPedido" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        <form id="formPedido" method="POST">
+            @csrf
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h2 class="text-2xl font-semibold text-gray-900">Realizar Pedido</h2>
+                <button type="button" onclick="cerrarModalPedido()" class="text-gray-400 hover:text-gray-600 text-2xl transition duration-150 ease-in-out">&times;</button>
+            </div>
+            <div class="px-6 py-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">¿Desea agregar alguna nota al pedido? (opcional)</label>
+                <textarea name="notas" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" placeholder="Ej: Entregar antes del viernes, instrucciones especiales..."></textarea>
+            </div>
+            <div class="flex justify-end px-6 py-4 border-t space-x-3">
+                <button type="button" onclick="cerrarModalPedido()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-150 ease-in-out">Cancelar</button>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-700 rounded-lg hover:from-green-600 hover:to-green-800 transition duration-150 ease-in-out">Confirmar pedido</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function abrirModalPedido(cotizacionId) {
+        const modal = document.getElementById('modalPedido');
+        const form = document.getElementById('formPedido');
+        form.action = `/pedido/crear/${cotizacionId}`;
+        form.reset();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+    function cerrarModalPedido() {
+        const modal = document.getElementById('modalPedido');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+</script>
+@endpush
             </div>
         </div>
     </div>
@@ -152,7 +190,7 @@
                     <div class="space-y-3 mb-6">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Precio unitario:</span>
-                            <span class="font-medium">${{ number_format($cotizacion->precio_unitario, 2) }}</span>
+                            <span class="font-medium">${{ number_format($cotizacion->producto->precio_base, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Cantidad:</span>
@@ -310,7 +348,7 @@
 <script>
     // Mostrar modal de confirmación para realizar pedido
     function confirmarPedido(id) {
-        document.getElementById('pedido-form').action = `{{ route('client.pedido-crear', '') }}/${id}`;
+        document.getElementById('pedido-form').action = `{{ route('client.pedido-crear', ['cotizacion' => 'COTI_ID']) }}`.replace('COTI_ID', id);
         document.getElementById('pedido-modal').classList.remove('hidden');
     }
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cotizacion_id')->constrained('cotizaciones');
-            $table->integer('numero_pedido');
+            $table->string('numero_pedido');
             $table->string('estado');
             $table->string('prioridad');
             $table->text('notas')->nullable();

@@ -82,7 +82,7 @@
                     <p class="text-gray-600">Precio base por unidad</p>
                 </div>
 
-                <form action="#" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('client.producto-cotizar', $producto->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="producto_id" value="{{ $producto->id }}">
 

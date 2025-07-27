@@ -14,12 +14,31 @@ use App\Http\Controllers\Client\InicioController;
 
 use App\Http\Controllers\AuthController;
 
+
+use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+        if ($user->rol === 'admin') {
+            return redirect()->route('admin.dashboard.index');
+        } elseif ($user->rol === 'cliente') {
+            return redirect()->route('client.inicio');
+        } else {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Rol no autorizado.');
+        }
+    }
     return redirect()->route('login');
 });
 
-Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+// Rutas de autenticación (solo para invitados)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/signup', [AuthController::class, 'signupForm'])->name('signup');
+    Route::post('/signup', [AuthController::class, 'signup'])->name('signup.post');
+});
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -48,6 +67,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Cotizaciones admin
     Route::get('/admin/cotizaciones', [CotizacionController::class, 'index'])->name('admin.cotizaciones.index');
+    Route::get('/admin/cotizaciones/{id}', [CotizacionController::class, 'detalle'])->name('admin.cotizaciones.detalle');
     Route::post('/admin/cotizaciones', [CotizacionController::class, 'guardar'])->name('admin.cotizaciones.guardar');
     Route::put('/admin/cotizaciones/{cotizacion}', [CotizacionController::class, 'actualizar'])->name('admin.cotizaciones.actualizar');
     Route::patch('/admin/cotizaciones/{cotizacion}/estado', [CotizacionController::class, 'eliminar'])->name('admin.cotizaciones.eliminar');
@@ -76,12 +96,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 Route::middleware(['auth', 'role:cliente'])->group(function () {
+    // Página de pago de pedido
+    Route::get('/pedido/{id}/pago', [App\Http\Controllers\Client\PagoController::class, 'pagoPedido'])->name('client.pago.pedido')->where('id', '[0-9]+');
+    Route::post('/pedido/{id}/pago', [App\Http\Controllers\Client\PagoController::class, 'generarComprobante'])->name('client.pago.generar')->where('id', '[0-9]+');
     // Inicio
     Route::get('/inicio', [InicioController::class, 'index'])->name('client.inicio');
     
     // Productos
     Route::get('/productos', [App\Http\Controllers\Client\ProductoController::class, 'index'])->name('client.productos');
     Route::get('/producto/{id}', [App\Http\Controllers\Client\ProductoController::class, 'detalle'])->name('client.producto-detalle');
+    Route::post('/producto/{id}/cotizar', [App\Http\Controllers\Client\CotizacionController::class, 'cotizarDesdeProducto'])->name('client.producto-cotizar');
     
     // Cotizaciones
     Route::get('/cotizaciones', [App\Http\Controllers\Client\CotizacionController::class, 'index'])->name('client.cotizaciones');
@@ -90,10 +114,11 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/cotizacion/{id}', [App\Http\Controllers\Client\CotizacionController::class, 'detalle'])
         ->name('client.cotizacion-detalle')
         ->where('id', '[0-9]+');
+    
 
     //Pedidso
     Route::post('/pedido/crear/{cotizacion}', [App\Http\Controllers\Client\PedidoController::class, 'crear'])
-        ->name('client.pedido-crear')  // ← Sin "name:"
+        ->name('client.pedido-crear')  
         ->where('cotizacion', '[0-9]+');
     Route::get('/pedido/{id}/seguimiento', [App\Http\Controllers\Client\PedidoController::class, 'seguimiento'])
         ->name('client.pedido-seguimiento')

@@ -7,6 +7,7 @@ use App\Models\Pedido;
 use App\Models\Cotizacion;
 use App\Models\Pago;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -77,11 +78,24 @@ class PedidoController extends Controller
             ->where('estado', 'aprobada')
             ->findOrFail($cotizacionId);
 
-        // Crear el nuevo pedido
+        // Calcular prioridad según cantidad/precio
+        $cantidad = $cotizacionModel->cantidad ?? 0;
+        $precio = $cotizacionModel->precio_total ?? 0;
+        if ($cantidad > 1000 || $precio > 1000) {
+            $prioridad = 'alta';
+        } elseif ($cantidad < 100 || $precio < 100) {
+            $prioridad = 'baja';
+        } else {
+            $prioridad = 'media';
+        }
+
         $pedido = new Pedido([
             'cotizacion_id' => $cotizacionModel->id,
+            'numero_pedido' => Str::uuid()->toString(),
             'estado' => 'pendiente',
             'fecha_pedido' => now(),
+            'prioridad' => $prioridad,
+            'notas' => $request->input('notas'),
         ]);
 
         $pedido->save();

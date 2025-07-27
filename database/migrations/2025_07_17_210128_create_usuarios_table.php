@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('rol')->default('cliente');
             $table->timestamp('email_verified_at')->nullable(); // nuevo
             $table->string('password');
+            $table->string('estado');
             $table->rememberToken(); // nuevo
             $table->timestamps();
         });

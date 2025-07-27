@@ -81,28 +81,7 @@
                 <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nombre del producto..." class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             </div>
 
-            <!-- Filtro por estado -->
-            <div class="w-full md:w-48">
-                <label for="estado" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                <select name="estado" id="estado" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option value="">Todos</option>
-                    <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                    <option value="aprobada" {{ request('estado') == 'aprobada' ? 'selected' : '' }}>Aprobada</option>
-                    <option value="rechazada" {{ request('estado') == 'rechazada' ? 'selected' : '' }}>Rechazada</option>
-                    <option value="vencida" {{ request('estado') == 'vencida' ? 'selected' : '' }}>Vencida</option>
-                </select>
-            </div>
-
-            <!-- Ordenar por -->
-            <div class="w-full md:w-48">
-                <label for="sort" class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
-                <select name="sort" id="sort" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Más recientes</option>
-                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Más antiguas</option>
-                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Precio (menor a mayor)</option>
-                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Precio (mayor a menor)</option>
-                </select>
-            </div>
+            
 
             <!-- Botones de acción -->
             <div class="flex space-x-2">
@@ -172,11 +151,51 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $cotizacion->created_at->format('d/m/Y H:i') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('client.cotizacion-detalle', $cotizacion->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Ver detalles</a>
-
                             @if($cotizacion->estado == 'aprobada')
-                            <a href="#" onclick="confirmarPedido('{{ $cotizacion->id }}')" class="text-green-600 hover:text-green-900">Realizar pedido</a>
+                                <a href="{{ route('client.cotizacion-detalle', $cotizacion->id) }}" class="text-green-600 hover:text-green-900 mr-3">Realizar pedido</a>
+                            @else
+                                <a href="{{ route('client.cotizacion-detalle', $cotizacion->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Ver detalles</a>
                             @endif
+<!-- Modal para realizar pedido -->
+<div id="modalPedido" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        <form id="formPedido" method="POST">
+            @csrf
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h2 class="text-2xl font-semibold text-gray-900">Realizar Pedido</h2>
+                <button type="button" onclick="cerrarModalPedido()" class="text-gray-400 hover:text-gray-600 text-2xl transition duration-150 ease-in-out">&times;</button>
+            </div>
+            <div class="px-6 py-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">¿Desea agregar alguna nota al pedido? (opcional)</label>
+                <textarea name="notas" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" placeholder="Ej: Entregar antes del viernes, instrucciones especiales..."></textarea>
+            </div>
+            <div class="flex justify-end px-6 py-4 border-t space-x-3">
+                <button type="button" onclick="cerrarModalPedido()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-150 ease-in-out">Cancelar</button>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-700 rounded-lg hover:from-green-600 hover:to-green-800 transition duration-150 ease-in-out">Confirmar pedido</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    let cotizacionIdSeleccionada = null;
+    function abrirModalPedido(cotizacionId) {
+        cotizacionIdSeleccionada = cotizacionId;
+        const modal = document.getElementById('modalPedido');
+        const form = document.getElementById('formPedido');
+        form.action = `/cliente/pedidos/crear/${cotizacionId}`;
+        form.reset();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+    function cerrarModalPedido() {
+        const modal = document.getElementById('modalPedido');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+</script>
+@endpush
                         </td>
                     </tr>
                     @endforeach

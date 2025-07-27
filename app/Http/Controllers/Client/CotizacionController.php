@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
@@ -51,5 +50,41 @@ class CotizacionController extends Controller
             // Procesar formulario
             // Tu lógica actual para crear la cotización
         }
+    }
+
+        public function cotizarDesdeProducto(Request $request, $id)
+    {
+        $request->validate([
+            'cantidad' => 'required|integer|min:1',
+            'archivo' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB
+        ]);
+
+        $producto = Producto::findOrFail($id);
+
+        // Guardar archivo
+        $archivoSubido = $request->file('archivo');
+        $nombreOriginal = $archivoSubido->getClientOriginalName();
+        $ruta = $archivoSubido->store('cotizaciones', 'public');
+        $archivo = Archivo::create([
+            'usuario_id' => Auth::id(),
+            'nombre_original' => $nombreOriginal,
+            'ruta_guardado' => $ruta,
+            'tamaño_archivo' => $archivoSubido->getSize() / 1024, // KB
+            'tipo_mime' => $archivoSubido->getClientMimeType(),
+        ]);
+
+        $precioTotal = $producto->precio_base * $request->cantidad;
+
+        $cotizacion = Cotizacion::create([
+            'usuario_id' => Auth::id(),
+            'producto_id' => $producto->id,
+            'archivo_id' => $archivo->id,
+            'cantidad' => $request->cantidad,
+            'precio_total' => $precioTotal,
+            'estado' => 'pendiente',
+        ]);
+
+        return redirect()->route('client.cotizacion-detalle', $cotizacion->id)
+            ->with('success', '¡Cotización creada correctamente!');
     }
 }
