@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
@@ -27,15 +26,15 @@ class PedidoController extends Controller
 
     public function detalle($id)
     {
-        $pedido = Pedido::with(['cotizacion.producto', 'cotizacion.archivo'])
+        $pedido = Pedido::with(['cotizacion.producto', 'cotizacion.archivo', 'pago'])
             ->whereHas('cotizacion', function($query) {
                 $query->where('usuario_id', Auth::id());
             })
             ->findOrFail($id);
 
-        $pagos = Pago::where('pedido_id', $id)->get();
+        $pago = $pedido->pago;
 
-        return view('Client.pedido-detalle', compact('pedido', 'pagos'));
+        return view('Client.pedido-detalle', compact('pedido', 'pago'));
     }
 
     public function seguimiento($id)
@@ -102,5 +101,36 @@ class PedidoController extends Controller
 
         return redirect()->route('client.pedido-detalle', $pedido->id)
             ->with('success', 'Pedido creado exitosamente');
+    }
+
+     // Previsualizar comprobante PDF del pago
+    public function verComprobante($id)
+    {
+        $pedido = Pedido::with(['pagos','cotizacion.usuario'])->whereHas('cotizacion', function($q) {
+            $q->where('usuario_id', Auth::id());
+        })->findOrFail($id);
+        $pago = $pedido->pagos->first();
+        $usuarioId = $pedido->cotizacion->usuario->id ?? null;
+        $uuid = $pago ? $pago->referencia : null;
+        $pdfPath = ($usuarioId && $uuid) ? "pagos/{$usuarioId}/ticket-{$uuid}.pdf" : null;
+        if (!$pdfPath || !\Illuminate\Support\Facades\Storage::exists($pdfPath)) {
+            if ($usuarioId && $uuid) {
+                $pdf = app('dompdf.wrapper');
+                $pdf->loadView('Client.ticket-pago', [
+                    'pedido' => $pedido,
+                    'metodo' => $pago ? $pago->metodo : 'qr',
+                    'fecha' => $pago ? $pago->fecha_pago : now()->format('d/m/Y H:i'),
+                ]);
+                \Illuminate\Support\Facades\Storage::makeDirectory("pagos/{$usuarioId}");
+                \Illuminate\Support\Facades\Storage::put($pdfPath, $pdf->output());
+            } else {
+                abort(404);
+            }
+        }
+        $pdfContent = \Illuminate\Support\Facades\Storage::get($pdfPath);
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="ticket-pago.pdf"',
+        ]);
     }
 }

@@ -11,42 +11,58 @@
     </button>
 </div>
 
+
 <div class="overflow-x-auto bg-white rounded shadow">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cotización</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nº Pedido</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prioridad</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pedido</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Producto</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prioridad</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pago</th>
+                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
             @foreach($pedidos as $p)
             <tr>
-                <td class="px-6 py-4">{{ $p->id }}</td>
-                <td class="px-6 py-4">#{{ $p->cotizacion->id }} – {{ $p->cotizacion->producto->nombre }}</td>
-                <td class="px-6 py-4">{{ $p->numero_pedido }}</td>
-                <td class="px-6 py-4">
+                <td class="px-4 py-4">
+                    <div class="font-semibold">#{{ $p->numero_pedido }}</div>
+                    <div class="text-xs text-gray-500">Cotización #{{ $p->cotizacion->id }}</div>
+                </td>
+                <td class="px-4 py-4">
+                    {{ $p->cotizacion->usuario->nombre }}<br>
+                    <span class="text-xs text-gray-500">{{ $p->cotizacion->usuario->email }}</span>
+                </td>
+                <td class="px-4 py-4">
+                    {{ $p->cotizacion->producto->nombre }}<br>
+                    <span class="text-xs text-gray-500">{{ $p->cotizacion->producto->descripcion ?? '' }}</span>
+                </td>
+                <td class="px-4 py-4">
                     <span class="inline-flex px-2 text-xs font-semibold rounded-full
-                            {{ $p->estado == 'cancelado' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                        {{ $p->estado == 'cancelado' ? 'bg-red-100 text-red-800' : ($p->estado == 'finalizado' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
                         {{ ucfirst($p->estado) }}
                     </span>
                 </td>
-                <td class="px-6 py-4">{{ ucfirst($p->prioridad) }}</td>
-                <td class="px-6 py-4 text-right space-x-2">
-                    <button class="text-indigo-600 hover:underline btnEdit"
-                        data-json="{{ $p->toJson() }}">Editar</button>
+                <td class="px-4 py-4">{{ ucfirst($p->prioridad) }}</td>
+                <td class="px-4 py-4">
+                    @php $pago = $p->pago; @endphp
+                    @if($pago)
+                        <span class="inline-flex items-center px-2 py-1 text-xs rounded bg-green-100 text-green-800">Pagado</span><br>
+                        <span class="text-xs text-gray-500">{{ ucfirst($pago->metodo ?? '-') }}</span>
+                    @else
+                        <span class="inline-flex items-center px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-800">Pendiente</span>
+                    @endif
+                </td>
+                <td class="px-4 py-4 text-right space-x-2">
+                    <a href="{{ route('admin.pedidos.detalle', $p->id) }}" class="text-blue-600 hover:underline">Ver Detalle</a>
+                    <button class="text-indigo-600 hover:underline btnEdit" data-json="{{ $p->toJson() }}">Editar</button>
                     <form action="{{ route('admin.pedidos.eliminar', $p->id) }}" method="POST" class="inline">
                         @csrf @method('PATCH')
-                        @php
-                        $accion = $p->estado === 'cancelada' ? 'Reactivar' : 'Cancelar';
-                        @endphp
-
-                        <button class="text-red-600 hover:underline"
-                            onclick="return confirm('¿Está seguro que desea {{ $accion }} pedido?')">
+                        @php $accion = $p->estado === 'cancelada' ? 'Reactivar' : 'Cancelar'; @endphp
+                        <button class="text-red-600 hover:underline" onclick="return confirm('¿Está seguro que desea {{ $accion }} pedido?')">
                             {{ $accion }}
                         </button>
                     </form>
@@ -70,22 +86,6 @@
             </div>
 
             <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Cotización</label>
-                    <select name="cotizacion_id" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
-                        @foreach($cotizaciones as $c)
-                        <option value="{{ $c->id }}">
-                            #{{ $c->id }} – {{ $c->producto->nombre }} ({{ $c->usuario->nombre }})
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Nº Pedido</label>
-                    <input type="number" name="numero_pedido" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
-                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Estado</label>
                     <select name="estado" required
@@ -137,10 +137,12 @@
             modalTitle.textContent = 'Actualizar Pedido';
             method.value = 'PUT';
             form.action = `/admin/pedidos/${editData.id}`;
-            Object.keys(editData).forEach(k => {
-                const el = form.querySelector(`[name="${k}"]`);
-                if (el) el.value = editData[k];
-            });
+            // Set values for editable fields
+            if (form.cotizacion_id) form.cotizacion_id.value = editData.cotizacion_id;
+            if (form.numero_pedido) form.numero_pedido.value = editData.numero_pedido;
+            if (form.estado) form.estado.value = editData.estado;
+            if (form.prioridad) form.prioridad.value = editData.prioridad;
+            if (form.notas) form.notas.value = editData.notas || '';
         } else {
             modalTitle.textContent = 'Nuevo Pedido';
             method.value = 'POST';

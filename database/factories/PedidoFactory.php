@@ -24,6 +24,7 @@ class PedidoFactory extends Factory
             'prioridad' => fake()->randomElement(['baja', 'media', 'alta', 'urgente']),
             'notas' => fake()->optional()->text(200),
             'fecha_pedido' => fake()->dateTimeBetween('-30 days', 'now'),
+            'pago_id' => null,
         ];
     }
 

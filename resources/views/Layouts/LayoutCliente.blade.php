@@ -59,6 +59,9 @@
                     <a href="{{ route('client.archivos') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.archivos') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-file-alt mr-2"></i> Mis Archivos
                     </a>
+                    <a href="{{ route('client.direcciones.index') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.direcciones.*') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
+                    </a>
                     <a href="{{ route('client.notificaciones') }}" class="sidebar-link block px-3 py-2 rounded hover:bg-indigo-100 hover:text-indigo-600 flex items-center {{ request()->routeIs('client.notificaciones') ? 'bg-indigo-100 text-indigo-600 font-medium' : '' }}">
                         <i class="fas fa-bell mr-2"></i> Notificaciones
                         @if(Auth::check() && Auth::user()->notificaciones()->where('leido', false)->count() > 0)

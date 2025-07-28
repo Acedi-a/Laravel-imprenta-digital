@@ -14,7 +14,8 @@ class Envio extends Model
         'transportista',       
         'codigo_seguimiento',  
         'fecha_envio',         
-        'fecha_estimada_entrega'
+        'fecha_estimada_entrega',
+        'estado'
     ];
 
     public function pedido()

@@ -72,8 +72,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/admin/cotizaciones/{cotizacion}', [CotizacionController::class, 'actualizar'])->name('admin.cotizaciones.actualizar');
     Route::patch('/admin/cotizaciones/{cotizacion}/estado', [CotizacionController::class, 'eliminar'])->name('admin.cotizaciones.eliminar');
 
+
     // Pedidos admin
     Route::get('/admin/pedidos', [PedidoController::class, 'index'])->name('admin.pedidos.index');
+    Route::get('/admin/pedidos/{id}/detalle', [PedidoController::class, 'detalle'])->name('admin.pedidos.detalle');
+    Route::get('/admin/pedidos/{id}/pdf-preview', [PedidoController::class, 'pdfPreview'])->name('admin.pedidos.pdfpreview');
     Route::post('/admin/pedidos', [PedidoController::class, 'guardar'])->name('admin.pedidos.guardar');
     Route::put('/admin/pedidos/{pedido}', [PedidoController::class, 'actualizar'])->name('admin.pedidos.actualizar');
     Route::patch('/admin/pedidos/{pedido}/estado', [PedidoController::class, 'eliminar'])->name('admin.pedidos.eliminar');
@@ -96,6 +99,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 Route::middleware(['auth', 'role:cliente'])->group(function () {
+    // Descargar comprobante PDF generado
+    Route::get('/descargar-comprobante/{path}', function($path) {
+        $filePath = base64_decode($path);
+        if (!file_exists($filePath)) abort(404);
+        return response()->download($filePath, 'comprobante.pdf');
+    })->name('client.pago.descargar');
+    // Previsualizar comprobante PDF del pago
+    Route::get('/pedido/{id}/comprobante', [App\Http\Controllers\Client\PedidoController::class, 'verComprobante'])->name('client.pedido.comprobante')->where('id', '[0-9]+');
     // Página de pago de pedido
     Route::get('/pedido/{id}/pago', [App\Http\Controllers\Client\PagoController::class, 'pagoPedido'])->name('client.pago.pedido')->where('id', '[0-9]+');
     Route::post('/pedido/{id}/pago', [App\Http\Controllers\Client\PagoController::class, 'generarComprobante'])->name('client.pago.generar')->where('id', '[0-9]+');
@@ -116,12 +127,16 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
         ->where('id', '[0-9]+');
     
 
-    //Pedidso
+
+    //Pedidos
     Route::post('/pedido/crear/{cotizacion}', [App\Http\Controllers\Client\PedidoController::class, 'crear'])
         ->name('client.pedido-crear')  
         ->where('cotizacion', '[0-9]+');
     Route::get('/pedido/{id}/seguimiento', [App\Http\Controllers\Client\PedidoController::class, 'seguimiento'])
         ->name('client.pedido-seguimiento')
+        ->where('id', '[0-9]+');
+    Route::get('/pedido/{id}/envio', [App\Http\Controllers\Client\EnvioController::class, 'seguimiento'])
+        ->name('client.envio-seguimiento')
         ->where('id', '[0-9]+');
     Route::get('/pedido/{id}', [App\Http\Controllers\Client\PedidoController::class, 'detalle'])
         ->name('client.pedido-detalle')
@@ -139,5 +154,11 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::patch('/notificacion/{id}/leida', [App\Http\Controllers\Client\NotificacionController::class, 'marcarLeida'])->name('client.notificacion-leida');
     Route::patch('/notificaciones/todas-leidas', [App\Http\Controllers\Client\NotificacionController::class, 'marcarTodasLeidas'])->name('client.notificaciones-todas-leidas');
     Route::delete('/notificacion/{id}', [App\Http\Controllers\Client\NotificacionController::class, 'eliminar'])->name('client.notificacion-eliminar');
+    
+    // Direcciones
+    Route::get('/direcciones', [App\Http\Controllers\Client\DireccionController::class, 'index'])->name('client.direcciones.index');
+    Route::post('/direccion', [App\Http\Controllers\Client\DireccionController::class, 'store'])->name('client.direcciones.store');
+    Route::put('/direccion/{id}', [App\Http\Controllers\Client\DireccionController::class, 'update'])->name('client.direcciones.update');
+    Route::delete('/direccion/{id}', [App\Http\Controllers\Client\DireccionController::class, 'destroy'])->name('client.direcciones.destroy');
 });
 // --- Usuarios ---

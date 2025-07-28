@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('codigo_seguimiento');
             $table->timestamp('fecha_envio');
             $table->timestamp('fecha_estimada_entrega');
+            $table->string('estado')->default('pendiente');
             $table->timestamps();
         });
     }

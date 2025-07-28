@@ -20,4 +20,9 @@ class Direccion extends Model
         'pais',
         'defecto'
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'usuario_id');
+    }
 }

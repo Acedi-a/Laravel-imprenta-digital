@@ -56,6 +56,11 @@
                     <a href="{{ route('client.pedido-seguimiento', $pedido->id) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition duration-200">
                         <i class="fas fa-map-marker-alt mr-2"></i> Seguimiento
                     </a>
+                    @if($pedido->envio)
+                        <a href="{{ route('client.envio-seguimiento', $pedido->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                            <i class="fas fa-truck mr-2"></i> Seguimiento de Envío
+                        </a>
+                    @endif
                 @endif
                 <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition duration-200">
                     <i class="fas fa-print mr-2"></i> Imprimir

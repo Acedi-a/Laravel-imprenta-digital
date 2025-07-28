@@ -34,8 +34,16 @@
                     <td class="px-6 py-4">{{ $e->codigo_seguimiento }}</td>
                     <td class="px-6 py-4">
                         <span class="inline-flex px-2 text-xs font-semibold rounded-full
-                            {{ $e->estado == 'cancelado' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
-                            {{ $e->estado == 'cancelado' ? 'Cancelado' : 'Activo' }}
+                            @if($e->estado == 'pendiente') bg-yellow-100 text-yellow-800
+                            @elseif($e->estado == 'en_camino') bg-blue-100 text-blue-800
+                            @elseif($e->estado == 'entregado') bg-green-100 text-green-800
+                            @elseif($e->estado == 'cancelado') bg-red-100 text-red-800
+                            @else bg-gray-100 text-gray-800 @endif">
+                            @if($e->estado == 'pendiente') Pendiente
+                            @elseif($e->estado == 'en_camino') En camino
+                            @elseif($e->estado == 'entregado') Entregado
+                            @elseif($e->estado == 'cancelado') Cancelado
+                            @else {{ ucfirst($e->estado) }} @endif
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right space-x-2">
@@ -44,8 +52,8 @@
                         <form action="{{ route('admin.envios.eliminar', $e->id) }}" method="POST" class="inline">
                             @csrf @method('PATCH')
                             <button class="text-red-600 hover:underline"
-                                    onclick="return confirm('¿{{ $e->estado == 'cancelado' ? 'Reactivar' : 'Cancelar' }} envío?')">
-                                {{ $e->estado == 'cancelado' ? 'Reactivar' : 'Cancelar' }}
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este envío?')">
+                                Eliminar
                             </button>
                         </form>
                     </td>
@@ -70,41 +78,38 @@
             <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Pedido</label>
-                    <select name="pedido_id" required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
-                        @foreach($pedidos as $p)
-                            <option value="{{ $p->id }}">#{{ $p->numero_pedido }}</option>
-                        @endforeach
+                    <select name="pedido_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500" disabled>
+                        <option value="">No editable</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Dirección</label>
-                    <select name="direccion_id" required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
-                        @foreach($direcciones as $d)
-                            <option value="{{ $d->id }}">{{ $d->linea1 }}, {{ $d->ciudad }}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100" value="Dirección definida por el cliente" disabled>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Transportista</label>
-                    <input type="text" name="transportista" required
-                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
+                    <input type="text" name="transportista" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Código de Seguimiento</label>
-                    <input type="text" name="codigo_seguimiento" required
-                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
+                    <input type="text" name="codigo_seguimiento" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Envío</label>
-                    <input type="datetime-local" name="fecha_envio" required
-                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
+                    <input type="datetime-local" name="fecha_envio" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha Estimada de Entrega</label>
-                    <input type="datetime-local" name="fecha_estimada_entrega" required
-                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
+                    <input type="datetime-local" name="fecha_estimada_entrega" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Estado</label>
+                    <select name="estado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500">
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en_camino">En camino</option>
+                        <option value="entregado">Entregado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
                 </div>
             </div>
 

@@ -28,7 +28,7 @@
             @foreach($pagos as $p)
                 <tr>
                     <td class="px-6 py-4">{{ $p->id }}</td>
-                    <td class="px-6 py-4">#{{ $p->pedido->numero_pedido }}</td>
+                    <td class="px-6 py-4">#{{ $p->referencia     }}</td>
                     <td class="px-6 py-4">${{ number_format($p->monto, 2) }}</td>
                     <td class="px-6 py-4">{{ ucfirst($p->metodo) }}</td>
                     <td class="px-6 py-4">{{ (new DateTime($p->fecha_pago))->format('d/m/Y H:i') }}</td>
@@ -41,14 +41,8 @@
                     </td>
                     <td class="px-6 py-4 text-right space-x-2">
                         <button class="text-indigo-600 hover:underline btnEdit"
-                                data-json="{{ $p->toJson() }}">Editar</button>
-                        <form action="{{ route('admin.pagos.eliminar', $p->id) }}" method="POST" class="inline">
-                            @csrf @method('PATCH')
-                            <button class="text-red-600 hover:underline"
-                                    onclick="return confirm('¿{{ $p->estado == 'cancelado' ? 'Reactivar' : 'Cancelar' }} pago?')">
-                                {{ $p->estado == 'cancelado' ? 'Reactivar' : 'Cancelar' }}
-                            </button>
-                        </form>
+                                data-json="{{ $p->toJson() }}">Editar
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -69,6 +63,7 @@
             </div>
 
             <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!--
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Pedido</label>
                     <select name="pedido_id" required
@@ -77,6 +72,10 @@
                             <option value="{{ $p->id }}">#{{ $p->numero_pedido }}</option>
                         @endforeach
                     </select>
+                </div>
+                -->
+                <div class="text-sm text-gray-500 col-span-2 mb-2">
+                    <span class="text-xs">(No seleccione pedido aquí. Use la edición de pedido para asociar el pago.)</span>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Monto</label>

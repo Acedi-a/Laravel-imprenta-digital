@@ -23,9 +23,9 @@
         <div class="dato"><strong>Fecha:</strong> {{ $fecha }}</div>
         <div class="dato"><strong>Total:</strong> ${{ number_format($pedido->cotizacion->precio_total, 2) }}</div>
         <div class="dato uuid"><strong>UUID Pedido:</strong> {{ $pedido->numero_pedido }}</div>
-        @if($metodo === 'qr')
+        @if($metodo === 'qr' && (!isset($showQr) || $showQr))
         <div class="qr">
-            <img src="{{ public_path('img/qr-demo.png') }}" alt="QR Bancario">
+            <img src="{{ isset($qrPath) ? $qrPath : '' }}" alt="QR Bancario">
             <div style="font-size:12px;color:#888;">* Demo QR</div>
         </div>
         @endif

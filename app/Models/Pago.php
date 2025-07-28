@@ -9,16 +9,16 @@ class Pago extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pedido_id',
         'monto',
         'metodo',
         'fecha_pago',
         'estado',
-        'referencia'
+        'referencia',
+        'comprobante_url'
     ];
 
     public function pedido()
     {
-        return $this->belongsTo(Pedido::class,'pedido_id');
+        return $this->hasOne(\App\Models\Pedido::class, 'pago_id');
     }
 }

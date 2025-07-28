@@ -37,4 +37,9 @@ class Usuario extends Authenticatable
 
         return $this->hasMany(Notificacion::class, 'usuario_id');
     }
+
+     public function direcciones()
+    {
+        return $this->hasMany(\App\Models\Direccion::class, 'usuario_id');
+    }
 }

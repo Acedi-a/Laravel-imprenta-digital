@@ -25,6 +25,7 @@ class PagoFactory extends Factory
             'fecha_pago' => fake()->dateTimeBetween('-30 days', 'now'),
             'estado' => fake()->randomElement(['pendiente', 'completado', 'fallido', 'cancelado']),
             'referencia' => Str::uuid(),
+            'comprobante_url' => fake()->optional()->url(),
         ];
     }
 

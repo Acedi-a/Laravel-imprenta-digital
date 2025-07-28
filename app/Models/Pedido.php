@@ -14,11 +14,22 @@ class Pedido extends Model
         'estado',
         'prioridad',
         'notas',
-        'fecha_pedido'
+        'fecha_pedido',
+        'pago_id'
     ];
+
+    public function pago()
+    {
+        return $this->belongsTo(\App\Models\Pago::class, 'pago_id');
+    }
 
     public function cotizacion()
     {
         return $this->belongsTo(Cotizacion::class,'cotizacion_id');
+    }
+
+    public function envio()
+    {
+        return $this->hasOne(\App\Models\Envio::class, 'pedido_id');
     }
 }
