@@ -226,6 +226,33 @@
 
         <!-- Resumen de precios y pago -->
         <div class="space-y-8">
+            <!-- Dirección de envío -->
+            @if($pedido->direccion)
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100">
+                    <h3 class="text-lg font-semibold text-indigo-800 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        Dirección de envío
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-2">
+                        <p class="font-medium text-gray-900">{{ $pedido->direccion->linea1 }}</p>
+                        @if($pedido->direccion->linea2)
+                            <p class="text-gray-600">{{ $pedido->direccion->linea2 }}</p>
+                        @endif
+                        <p class="text-gray-600">{{ $pedido->direccion->ciudad }}, {{ $pedido->direccion->codigo_postal }}</p>
+                        <p class="text-gray-600">{{ $pedido->direccion->pais }}</p>
+                        @if($pedido->direccion->defecto)
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                <i class="fas fa-star mr-1"></i> Dirección predeterminada
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Resumen de precios -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden">
                 <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100">

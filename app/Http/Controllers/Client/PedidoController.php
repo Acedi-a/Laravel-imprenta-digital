@@ -26,7 +26,7 @@ class PedidoController extends Controller
 
     public function detalle($id)
     {
-        $pedido = Pedido::with(['cotizacion.producto', 'cotizacion.archivo', 'pago'])
+        $pedido = Pedido::with(['cotizacion.producto', 'cotizacion.archivo', 'pago', 'direccion'])
             ->whereHas('cotizacion', function($query) {
                 $query->where('usuario_id', Auth::id());
             })
@@ -39,7 +39,12 @@ class PedidoController extends Controller
 
     public function seguimiento($id)
     {
-        $pedido = Pedido::with(['cotizacion.producto'])
+        $pedido = Pedido::with([
+            'cotizacion.producto', 
+            'cotizacion.usuario',
+            'direccion',
+            'envio.pedido.cotizacion.usuario'
+        ])
             ->whereHas('cotizacion', function($query) {
                 $query->where('usuario_id', Auth::id());
             })

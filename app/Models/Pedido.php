@@ -15,7 +15,8 @@ class Pedido extends Model
         'prioridad',
         'notas',
         'fecha_pedido',
-        'pago_id'
+        'pago_id',
+        'direccion_id'
     ];
 
     public function pago()
@@ -31,5 +32,10 @@ class Pedido extends Model
     public function envio()
     {
         return $this->hasOne(\App\Models\Envio::class, 'pedido_id');
+    }
+
+    public function direccion()
+    {
+        return $this->belongsTo(Direccion::class, 'direccion_id');
     }
 }

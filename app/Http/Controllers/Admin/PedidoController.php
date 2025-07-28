@@ -63,22 +63,41 @@ class PedidoController extends Controller
 
         // Si el estado es 'finalizado' y el pedido no tiene envío, crearlo automáticamente
         if ($request->estado === 'finalizado' && !$pedido->envio) {
-            // Buscar dirección del cliente (por defecto o la primera)
-            $cotizacion = $pedido->cotizacion;
-            $usuario = $cotizacion ? $cotizacion->usuario : null;
-            $direccion = $usuario ? $usuario->direcciones()->where('defecto', true)->first() : null;
-            if (!$direccion && $usuario) {
-                $direccion = $usuario->direcciones()->first();
+            // Usar la dirección del pedido o buscar una dirección predeterminada como fallback
+            $direccionId = null;
+            
+            if ($pedido->direccion_id) {
+                // Usar la dirección seleccionada en el pedido
+                $direccionId = $pedido->direccion_id;
+            } else {
+                // Fallback: buscar dirección predeterminada del cliente
+                $cotizacion = $pedido->cotizacion;
+                $usuario = $cotizacion ? $cotizacion->usuario : null;
+                $direccion = $usuario ? $usuario->direcciones()->where('defecto', true)->first() : null;
+                if (!$direccion && $usuario) {
+                    $direccion = $usuario->direcciones()->first();
+                }
+                $direccionId = $direccion ? $direccion->id : null;
             }
-            if ($direccion) {
+            
+            if ($direccionId) {
                 \App\Models\Envio::create([
                     'pedido_id' => $pedido->id,
-                    'direccion_id' => $direccion->id,
+                    'direccion_id' => $direccionId,
                     'transportista' => 'Por asignar',
                     'codigo_seguimiento' => 'Por asignar',
                     'fecha_envio' => now(),
                     'fecha_estimada_entrega' => now()->addDays(3),
                     'estado' => 'pendiente',
+                ]);
+                
+                // Crear notificación para el cliente
+                \App\Models\Notificacion::create([
+                    'usuario_id' => $pedido->cotizacion->usuario_id,
+                    'titulo' => 'Envío creado',
+                    'mensaje' => "Se ha creado el envío para tu pedido #{$pedido->numero_pedido}. Puedes hacer seguimiento desde tu panel.",
+                    'tipo' => 'envio',
+                    'leido' => false,
                 ]);
             }
         }

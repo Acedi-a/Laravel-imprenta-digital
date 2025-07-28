@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cotizacion_id')->constrained('cotizaciones');
             $table->foreignId('pago_id')->nullable()->constrained('pagos');
+            $table->foreignId('direccion_id')->nullable()->constrained('direcciones');
             $table->string('numero_pedido');
             $table->string('estado');
             $table->string('prioridad');

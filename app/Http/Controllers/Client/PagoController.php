@@ -18,16 +18,31 @@ class PagoController extends Controller
         $pedido = Pedido::with('cotizacion')->whereHas('cotizacion', function($q) {
             $q->where('usuario_id', Auth::id());
         })->findOrFail($id);
-        return view('Client.pago-pedido', compact('pedido'));
+        
+        // Cargar direcciones del usuario
+        $direcciones = \App\Models\Direccion::where('usuario_id', Auth::id())->get();
+        
+        return view('Client.pago-pedido', compact('pedido', 'direcciones'));
     }
 
     // Genera el comprobante PDF del pago, crea el pago y luego el pedido
     public function generarComprobante(Request $request)
     {
+        $request->validate([
+            'metodo' => 'required|string',
+            'direccion_id' => 'required|exists:direcciones,id'
+        ]);
+
         $pedidoId = $request->route('id');
         $pedido = \App\Models\Pedido::with('cotizacion.usuario', 'pago')->whereHas('cotizacion', function($q) {
             $q->where('usuario_id', Auth::id());
         })->findOrFail($pedidoId);
+        
+        // Verificar que la dirección pertenece al usuario autenticado
+        $direccion = \App\Models\Direccion::where('id', $request->direccion_id)
+                                         ->where('usuario_id', Auth::id())
+                                         ->firstOrFail();
+        
         $cotizacion = $pedido->cotizacion;
         $usuarioId = $cotizacion->usuario->id;
         $metodo = $request->input('metodo');
@@ -75,7 +90,10 @@ class PagoController extends Controller
             'referencia' => $uuid,
             'comprobante_url' => $pdfPath,
         ]);
+        
+        // Actualizar pedido con pago y dirección de envío
         $pedido->pago_id = $pago->id;
+        $pedido->direccion_id = $request->direccion_id;
         $pedido->save();
 
         $filePath = storage_path('app/private/' . $pdfPath);

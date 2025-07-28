@@ -138,10 +138,13 @@
                             </div>
                             <div>
                                 <h4 class="font-medium">En camino</h4>
-                                <p class="text-sm text-gray-500">{{ $pedido->fecha_envio ? $pedido->fecha_envio->format('d/m/Y H:i') : 'Pendiente' }}</p>
+                                <p class="text-sm text-gray-500">{{ optional($pedido->envio)->fecha_envio ? optional($pedido->envio->fecha_envio)->format('d/m/Y H:i') : 'Pendiente' }}</p>
                                 <p class="text-gray-600 mt-1">{{ $pedido->estado == 'en_camino' || $pedido->estado == 'entregado' ? 'Tu pedido está en camino a la dirección de entrega.' : 'Tu pedido será enviado una vez completada la impresión.' }}</p>
-                                @if($pedido->numero_seguimiento && ($pedido->estado == 'en_camino' || $pedido->estado == 'entregado'))
-                                <p class="text-gray-600 mt-1"><span class="font-medium">Número de seguimiento:</span> {{ $pedido->numero_seguimiento }}</p>
+                                @if($pedido->envio && ($pedido->estado == 'en_camino' || $pedido->estado == 'entregado'))
+                                <p class="text-gray-600 mt-1">
+                                    <span class="font-medium">Código de seguimiento:</span> 
+                                    <span class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">ENV-{{ str_pad($pedido->envio->id, 6, '0', STR_PAD_LEFT) }}</span>
+                                </p>
                                 @endif
                             </div>
                         </li>
@@ -173,38 +176,60 @@
                     <div class="space-y-4">
                         <div>
                             <h4 class="font-medium mb-2">Dirección de entrega:</h4>
-                            <p class="text-gray-600">{{ $pedido->envio->direccion }}</p>
-                            <p class="text-gray-600">{{ $pedido->envio->ciudad }}, {{ $pedido->envio->estado }} {{ $pedido->envio->codigo_postal }}</p>
-                            <p class="text-gray-600">{{ $pedido->envio->pais }}</p>
+                            @if($pedido->direccion)
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <p class="font-medium text-gray-900">{{ $pedido->direccion->linea1 }}</p>
+                                    @if($pedido->direccion->linea2)
+                                        <p class="text-gray-600">{{ $pedido->direccion->linea2 }}</p>
+                                    @endif
+                                    <p class="text-gray-600">{{ $pedido->direccion->direccion }}</p>
+                                    @if($pedido->direccion->ciudad)
+                                        <p class="text-gray-600">{{ $pedido->direccion->ciudad }}</p>
+                                    @endif
+                                    @if($pedido->direccion->codigo_postal)
+                                        <p class="text-gray-600">CP: {{ $pedido->direccion->codigo_postal }}</p>
+                                    @endif
+                                </div>
+                            @else
+                                <p class="text-gray-500 italic">No se ha especificado dirección de entrega</p>
+                            @endif
                         </div>
 
                         <div>
-                            <h4 class="font-medium mb-2">Método de envío:</h4>
-                            <p class="text-gray-600">{{ $pedido->envio->metodo_envio }}</p>
+                            <h4 class="font-medium mb-2">Transportista:</h4>
+                            <p class="text-gray-600">{{ $pedido->envio->transportista ?: 'No asignado' }}</p>
                         </div>
 
-                        @if($pedido->numero_seguimiento)
                         <div>
-                            <h4 class="font-medium mb-2">Número de seguimiento:</h4>
+                            <h4 class="font-medium mb-2">Código de seguimiento:</h4>
                             <div class="flex items-center">
-                                <span class="text-gray-600 mr-2">{{ $pedido->numero_seguimiento }}</span>
-                                <button class="text-indigo-600 hover:text-indigo-800" onclick="copyToClipboard('{{ $pedido->numero_seguimiento }}')">
+                                @php $codigoSeguimiento = 'ENV-' . str_pad($pedido->envio->id, 6, '0', STR_PAD_LEFT); @endphp
+                                <span class="font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded mr-2">{{ $codigoSeguimiento }}</span>
+                                <button class="text-indigo-600 hover:text-indigo-800" onclick="copyToClipboard('{{ $codigoSeguimiento }}')">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
                         </div>
+
+                        @if($pedido->envio->fecha_envio)
+                        <div>
+                            <h4 class="font-medium mb-2">Fecha de envío:</h4>
+                            <p class="text-gray-600">{{ $pedido->envio->fecha_envio ? \Carbon\Carbon::parse($pedido->envio->fecha_envio)->format('d/m/Y H:i') : '' }}</p>
+                        </div>
                         @endif
 
-                        @if($pedido->envio->instrucciones_especiales)
+                        @if($pedido->envio->fecha_estimada_entrega)
                         <div>
-                            <h4 class="font-medium mb-2">Instrucciones especiales:</h4>
-                            <p class="text-gray-600">{{ $pedido->envio->instrucciones_especiales }}</p>
+                            <h4 class="font-medium mb-2">Entrega estimada:</h4>
+                            <p class="text-gray-600">{{ \Carbon\Carbon::parse($pedido->envio->fecha_estimada_entrega)->format('d/m/Y H:i') }}</p>
                         </div>
                         @endif
                     </div>
                     @else
                     <div class="py-4 text-center">
+                        <i class="fas fa-shipping-fast text-4xl text-gray-300 mb-4"></i>
                         <p class="text-gray-600">No hay información de envío disponible.</p>
+                        <p class="text-gray-400 text-sm">Se creará automáticamente cuando el pedido esté finalizado.</p>
                     </div>
                     @endif
                 </div>
@@ -216,22 +241,31 @@
                     <h3 class="text-lg font-semibold text-indigo-800">Contacto de entrega</h3>
                 </div>
                 <div class="p-6">
-                    @if($pedido->envio && $pedido->envio->contacto_nombre)
+                    @if($pedido->cotizacion && $pedido->cotizacion->usuario)
                     <div class="space-y-3">
                         <div class="flex items-center">
                             <i class="fas fa-user text-indigo-500 mr-3"></i>
-                            <span class="text-gray-600">{{ $pedido->envio->contacto_nombre }}</span>
+                            <span class="text-gray-600">{{ $pedido->cotizacion->usuario->nombre }}</span>
                         </div>
-                        @if($pedido->envio->contacto_telefono)
+                        @if($pedido->cotizacion->usuario->telefono)
                         <div class="flex items-center">
                             <i class="fas fa-phone text-indigo-500 mr-3"></i>
-                            <span class="text-gray-600">{{ $pedido->envio->contacto_telefono }}</span>
+                            <span class="text-gray-600">{{ $pedido->cotizacion->usuario->telefono }}</span>
                         </div>
                         @endif
-                        @if($pedido->envio->contacto_email)
                         <div class="flex items-center">
                             <i class="fas fa-envelope text-indigo-500 mr-3"></i>
-                            <span class="text-gray-600">{{ $pedido->envio->contacto_email }}</span>
+                            <span class="text-gray-600">{{ $pedido->cotizacion->usuario->email }}</span>
+                        </div>
+                        @if($pedido->direccion)
+                        <div class="mt-4 pt-3 border-t border-gray-100">
+                            <h5 class="font-medium text-gray-800 mb-2">Dirección de entrega:</h5>
+                            <div class="text-sm text-gray-600">
+                                <p>{{ $pedido->direccion->direccion }}</p>
+                                @if($pedido->direccion->ciudad)
+                                    <p>{{ $pedido->direccion->ciudad }}</p>
+                                @endif
+                            </div>
                         </div>
                         @endif
                     </div>

@@ -36,8 +36,9 @@
         </div>
 
         @if($no_leidas > 0)
-        <form action="{{ route('client.notificaciones.marcar-todas-leidas') }}" method="POST">
+        <form action="{{ route('client.notificaciones-todas-leidas') }}" method="POST">
             @csrf
+            @method('PATCH')
             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition duration-200 flex items-center">
                 <i class="fas fa-check-double mr-2"></i> Marcar todas como leídas
             </button>
@@ -60,6 +61,7 @@
                     <option value="cotizacion" {{ request('tipo') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
                     <option value="pedido" {{ request('tipo') == 'pedido' ? 'selected' : '' }}>Pedido</option>
                     <option value="pago" {{ request('tipo') == 'pago' ? 'selected' : '' }}>Pago</option>
+                    <option value="envio" {{ request('tipo') == 'envio' ? 'selected' : '' }}>Envío</option>
                     <option value="sistema" {{ request('tipo') == 'sistema' ? 'selected' : '' }}>Sistema</option>
                 </select>
             </div>
@@ -110,6 +112,10 @@
                         <div class="rounded-full bg-yellow-100 p-3">
                             <i class="fas fa-credit-card text-xl text-yellow-600"></i>
                         </div>
+                        @elseif($notificacion->tipo == 'envio')
+                        <div class="rounded-full bg-indigo-100 p-3">
+                            <i class="fas fa-truck text-xl text-indigo-600"></i>
+                        </div>
                         @else
                         <div class="rounded-full bg-purple-100 p-3">
                             <i class="fas fa-bell text-xl text-purple-600"></i>
@@ -140,6 +146,7 @@
                                             @if($notificacion->tipo == 'cotizacion') bg-blue-100 text-blue-800
                                             @elseif($notificacion->tipo == 'pedido') bg-green-100 text-green-800
                                             @elseif($notificacion->tipo == 'pago') bg-yellow-100 text-yellow-800
+                                            @elseif($notificacion->tipo == 'envio') bg-indigo-100 text-indigo-800
                                             @else bg-purple-100 text-purple-800 @endif">
                                     {{ ucfirst($notificacion->tipo) }}
                                 </span>
@@ -147,8 +154,9 @@
 
                             <div class="flex space-x-2">
                                 @if(!$notificacion->leido)
-                                <form action="{{ route('client.notificaciones.marcar-leida', $notificacion->id) }}" method="POST" class="inline">
+                                <form action="{{ route('client.notificacion-leida', $notificacion->id) }}" method="POST" class="inline">
                                     @csrf
+                                    @method('PATCH')
                                     <button type="submit" class="text-indigo-600 hover:text-indigo-800 text-sm">
                                         <i class="fas fa-check mr-1"></i> Marcar como leída
                                     </button>

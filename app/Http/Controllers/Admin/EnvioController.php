@@ -13,8 +13,8 @@ class EnvioController extends Controller
 {
     public function index()
     {
-        $envios     = Envio::with(['pedido','direccion'])->orderBy('id','desc')->paginate(20);
-        $pedidos    = Pedido::where('estado','!=','cancelado')->get();
+        $envios = Envio::with(['pedido.cotizacion.usuario', 'pedido.direccion'])->orderBy('id','desc')->paginate(20);
+        $pedidos = Pedido::where('estado','!=','cancelado')->get();
         $direcciones = Direccion::all();
         return view('Admin.Envios.index', compact('envios','pedidos','direcciones'));
     }
@@ -49,40 +49,71 @@ class EnvioController extends Controller
     public function actualizar(Request $request, Envio $envio)
     {
         $request->validate([
-            'transportista'=> 'required|string|max:100',
-            'codigo_seguimiento' => 'required|string|max:100',
-            'fecha_envio' => 'required|date',
-            'fecha_estimada_entrega' => 'required|date|after:fecha_envio',
+            'transportista' => 'required|string|max:100',
+            'fecha_estimada_entrega' => 'required|date|after:now',
             'estado' => 'required|in:pendiente,en_camino,entregado,cancelado',
         ]);
 
-        $envio->update($request->only([
-            'transportista',
-            'codigo_seguimiento',
-            'fecha_envio',
-            'fecha_estimada_entrega',
-            'estado',
-        ]));
+        $estadoAnterior = $envio->estado;
+        $nuevoEstado = $request->estado;
+        
+        // Datos a actualizar
+        $datosActualizacion = [
+            'transportista' => $request->transportista,
+            'fecha_estimada_entrega' => $request->fecha_estimada_entrega,
+            'estado' => $nuevoEstado,
+        ];
+
+        // Si cambia de 'pendiente' a 'en_camino', establecer fecha_envio automáticamente
+        if ($estadoAnterior === 'pendiente' && $nuevoEstado === 'en_camino') {
+            $datosActualizacion['fecha_envio'] = now();
+        }
+
+        $envio->update($datosActualizacion);
 
         // Actualizar estado del pedido según el estado del envío
         $pedido = $envio->pedido;
-        if ($request->estado === 'en_camino' && $pedido->estado !== 'en_camino') {
+        if ($nuevoEstado === 'en_camino' && $pedido->estado !== 'en_camino') {
             $pedido->update(['estado' => 'en_camino']);
-        } elseif ($request->estado === 'entregado' && $pedido->estado !== 'entregado') {
+        } elseif ($nuevoEstado === 'entregado' && $pedido->estado !== 'entregado') {
             $pedido->update(['estado' => 'entregado']);
+        } elseif ($nuevoEstado === 'cancelado' && $pedido->estado !== 'cancelado') {
+            $pedido->update(['estado' => 'cancelado']);
         }
 
-        // Notificar al usuario del pedido sobre actualización de envío
+        // Crear notificación según el cambio de estado
         if ($pedido && $pedido->cotizacion && $pedido->cotizacion->usuario_id) {
+            $titulo = '';
+            $mensaje = '';
+            
+            switch ($nuevoEstado) {
+                case 'en_camino':
+                    $titulo = '🚛 Tu pedido está en camino';
+                    $mensaje = "¡Excelente! Tu pedido #{$pedido->numero_pedido} ya está en camino. El transportista {$request->transportista} se encarga de la entrega.";
+                    break;
+                case 'entregado':
+                    $titulo = '✅ Pedido entregado';
+                    $mensaje = "Tu pedido #{$pedido->numero_pedido} ha sido entregado exitosamente. ¡Gracias por confiar en nosotros!";
+                    break;
+                case 'cancelado':
+                    $titulo = '❌ Envío cancelado';
+                    $mensaje = "El envío de tu pedido #{$pedido->numero_pedido} ha sido cancelado. Te contactaremos para coordinar una nueva entrega.";
+                    break;
+                default:
+                    $titulo = 'Actualización de envío';
+                    $mensaje = "Se ha actualizado la información del envío de tu pedido #{$pedido->numero_pedido}.";
+            }
+            
             Notificacion::create([
                 'usuario_id' => $pedido->cotizacion->usuario_id,
                 'tipo' => 'envio',
-                'titulo' => 'Actualización de envío',
-                'mensaje' => 'El envío del pedido #' . $pedido->numero_pedido . ' ha sido actualizado. Revisa los nuevos datos de seguimiento.',
+                'titulo' => $titulo,
+                'mensaje' => $mensaje,
                 'leido' => false,
             ]);
         }
-        return redirect()->route('admin.envios.index')->with('success','Envío actualizado y notificación enviada.');
+
+        return redirect()->route('admin.envios.index')->with('success', 'Envío actualizado y notificación enviada.');
     }
 
     public function eliminar(Envio $envio)
