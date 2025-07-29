@@ -67,7 +67,7 @@
                                 data-envio-id="{{ $e->id }}"
                                 data-estado="{{ $e->estado }}"
                                 data-transportista="{{ $e->transportista ?: 'No asignado' }}"
-                                data-fecha-estimada="{{ $e->fecha_estimada_entrega }}"
+                                data-fecha-estimada="{{ $e->fecha_estimada_entrega ? \Carbon\Carbon::parse($e->fecha_estimada_entrega)->format('Y-m-d') : '' }}"
                                 data-pedido="{{ $e->pedido->numero_pedido }}"
                                 data-direccion="{{ $e->pedido->direccion ? $e->pedido->direccion->direccion : 'Sin dirección' }}">
                             Gestionar
@@ -163,6 +163,7 @@ const modal = document.getElementById('modal');
 const form = document.getElementById('formEnvio');
 
 function openModal(data) {
+    console.log('Datos recibidos:', data); // Debug
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     
@@ -177,13 +178,22 @@ function openModal(data) {
     // Rellenar campos editables
     form.querySelector('[name="transportista"]').value = data.transportista;
     form.querySelector('[name="estado"]').value = data.estado;
-    form.querySelector('[name="fecha_estimada_entrega"]').value = data.fechaEstimada ? data.fechaEstimada.replace(' ', 'T') : '';
+    
+    const fechaInput = form.querySelector('[name="fecha_estimada_entrega"]');
+    console.log('Fecha recibida:', data.fechaEstimada); // Debug
+    fechaInput.value = data.fechaEstimada || '';
+    console.log('Fecha asignada al input:', fechaInput.value); // Debug
 }
 
 function closeModal() {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    
+    // Reset completo del formulario
     form.reset();
+    form.querySelector('[name="transportista"]').value = '';
+    form.querySelector('[name="estado"]').value = 'pendiente';
+    form.querySelector('[name="fecha_estimada_entrega"]').value = '';
 }
 
 // Event listeners

@@ -50,7 +50,7 @@ class EnvioController extends Controller
     {
         $request->validate([
             'transportista' => 'required|string|max:100',
-            'fecha_estimada_entrega' => 'required|date|after:now',
+            'fecha_estimada_entrega' => 'required|date|after_or_equal:today',
             'estado' => 'required|in:pendiente,en_camino,entregado,cancelado',
         ]);
 
