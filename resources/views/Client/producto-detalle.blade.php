@@ -41,7 +41,8 @@
         <div>
             <div class="preview-container rounded-2xl overflow-hidden shadow-md mb-6 h-96 flex items-center justify-center">
                 <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full flex items-center justify-center">
-                    <span class="text-gray-500 text-lg">Vista previa del producto</span>
+                    <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : asset('images/no-image.png') }}" 
+                         alt="{{ $producto->nombre }}" class="object-cover w-full h-full">
                 </div>
             </div>
 

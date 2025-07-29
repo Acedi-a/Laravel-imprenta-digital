@@ -75,7 +75,9 @@
                 @foreach($productos as $producto)
                     <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 card-hover">
                         <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
-                            @if($producto->tamanoPapel && $producto->tamanoPapel->fotosReferenciales->count() > 0)
+                            @if($producto->imagen)
+                                <img src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}" class="w-full h-full object-cover">
+                            @elseif($producto->tamanoPapel && $producto->tamanoPapel->fotosReferenciales->count() > 0)
                                 <img src="{{ asset('storage/' . $producto->tamanoPapel->fotosReferenciales->first()->url) }}" alt="{{ $producto->nombre }}" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">

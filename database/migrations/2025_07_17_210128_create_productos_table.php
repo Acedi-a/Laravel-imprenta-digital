@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('cantidad_minima')->default(1);
             $table->decimal('precio_base', 10, 2);
             $table->decimal('descuento', 5, 2)->nullable();
+            $table->string('imagen')->nullable(); // Ruta de la imagen del producto
             $table->text('descripcion')->nullable();
             $table->string('estado')->default('activo');
             $table->timestamps();

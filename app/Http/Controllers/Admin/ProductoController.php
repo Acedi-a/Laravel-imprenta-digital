@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Producto;
 use App\Models\TamanoPapel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
@@ -28,11 +29,22 @@ class ProductoController extends Controller
             'cantidad_minima' => 'required|integer|min:1',
             'precio_base'     => 'required|numeric|min:0',
             'descuento'       => 'nullable|numeric|min:0',
+            'imagen'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'descripcion'     => 'nullable|string',
             'estado'          => 'required|in:activo,inactivo'
         ]);
 
-        Producto::create($request->all());
+        $data = $request->all();
+        
+        // Manejar la subida de imagen
+        if ($request->hasFile('imagen')) {
+            $imagen = $request->file('imagen');
+            $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+            $rutaImagen = $imagen->storeAs('productos', $nombreImagen, 'public');
+            $data['imagen'] = $rutaImagen;
+        }
+
+        Producto::create($data);
         return redirect()->route('admin.productos.index')->with('success', 'Producto creado.');
     }
 
@@ -48,11 +60,27 @@ class ProductoController extends Controller
             'cantidad_minima' => 'required|integer|min:1',
             'precio_base'     => 'required|numeric|min:0',
             'descuento'       => 'nullable|numeric|min:0',
+            'imagen'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'descripcion'     => 'nullable|string',
             'estado'          => 'required|in:activo,inactivo',
         ]);
 
-        $producto->update($request->all());
+        $data = $request->all();
+        
+        // Manejar la subida de imagen
+        if ($request->hasFile('imagen')) {
+            // Eliminar imagen anterior si existe
+            if ($producto->imagen && Storage::disk('public')->exists($producto->imagen)) {
+                Storage::disk('public')->delete($producto->imagen);
+            }
+            
+            $imagen = $request->file('imagen');
+            $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+            $rutaImagen = $imagen->storeAs('productos', $nombreImagen, 'public');
+            $data['imagen'] = $rutaImagen;
+        }
+
+        $producto->update($data);
         return redirect()->route('admin.productos.index')->with('success', 'Producto actualizado.');
     }
 

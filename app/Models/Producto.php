@@ -19,6 +19,7 @@ class Producto extends Model
         'cantidad_minima',
         'precio_base',
         'descuento',
+        'imagen',
         'descripcion',
         'estado'
     ];

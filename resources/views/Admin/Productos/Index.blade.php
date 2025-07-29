@@ -16,6 +16,7 @@
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo Impresión</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio base</th>
@@ -29,6 +30,15 @@
             @foreach($productos as $p)
             <tr>
                 <td class="px-6 py-4 text-sm text-gray-900">{{ $p->id }}</td>
+                <td class="px-6 py-4">
+                    @if($p->imagen)
+                        <img src="{{ asset('storage/' . $p->imagen) }}" alt="{{ $p->nombre }}" class="h-12 w-12 object-cover rounded-lg border border-gray-200">
+                    @else
+                        <div class="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                    @endif
+                </td>
                 <td class="px-6 py-4 text-sm text-gray-900">{{ $p->nombre }}</td>
                 <td class="px-6 py-4 text-sm text-gray-900">{{ $p->tipo_impresion }}</td>
                 <td class="px-6 py-4 text-sm text-gray-900">${{ number_format($p->precio_base, 2) }}</td>
@@ -66,7 +76,7 @@
 <!-- Modal -->
 <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
-        <form id="formProducto" method="POST">
+        <form id="formProducto" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="flex justify-between items-center px-6 py-4 border-b">
                 <h3 id="modalTitle" class="text-lg font-semibold">Nuevo Producto</h3>
@@ -141,6 +151,14 @@
                         <option value="inactivo">Inactivo</option>
                     </select>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Imagen del Producto</label>
+                    <input type="file" name="imagen" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <p class="mt-1 text-xs text-gray-500">Formatos permitidos: JPG, PNG, GIF. Máximo 2MB.</p>
+                    <div id="imagenPreview" class="mt-2 hidden">
+                        <img id="previewImg" src="" alt="Vista previa" class="h-20 w-20 object-cover rounded-lg border border-gray-200">
+                    </div>
+                </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Descripción</label>
                     <textarea name="descripcion" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
@@ -162,18 +180,30 @@ const modal   = document.getElementById('modal');
 const form    = document.getElementById('formProducto');
 const method  = document.getElementById('method');
 const modalTitle = document.getElementById('modalTitle');
+const imagenInput = form.querySelector('[name="imagen"]');
+const imagenPreview = document.getElementById('imagenPreview');
+const previewImg = document.getElementById('previewImg');
 
 function openModal(editData = null) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     form.reset();
+    imagenPreview.classList.add('hidden');
+    
     if (editData) {
         modalTitle.textContent = 'Editar Producto';
         method.value = 'PUT';
         Object.keys(editData).forEach(k => {
             const el = form.querySelector(`[name="${k}"]`);
-            if (el) el.value = editData[k];
+            if (el && k !== 'imagen') el.value = editData[k];
         });
+        
+        // Mostrar imagen existente si hay una
+        if (editData.imagen) {
+            previewImg.src = `/storage/${editData.imagen}`;
+            imagenPreview.classList.remove('hidden');
+        }
+        
         form.action = `/admin/productos/${editData.id}`;
     } else {
         modalTitle.textContent = 'Nuevo Producto';
@@ -181,10 +211,28 @@ function openModal(editData = null) {
         form.action = "{{ route('admin.productos.guardar') }}";
     }
 }
+
 function closeModal() {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    form.reset();
+    imagenPreview.classList.add('hidden');
 }
+
+// Vista previa de imagen
+imagenInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            imagenPreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imagenPreview.classList.add('hidden');
+    }
+});
 
 document.getElementById('btnNuevo').addEventListener('click', () => openModal());
 document.getElementById('btnCloseModal').addEventListener('click', closeModal);
